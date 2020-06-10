@@ -29,13 +29,7 @@ namespace PanzerEliteModelLoaderCSharp
 
                     result.Meshes = new List<RrfMesh>();
 
-                    for (var i = 0; i < result.MeshCount; i++)
-                    {
-                        var mesh = LoadMesh(fileStream, i);
-
-                        // Add loaded mesh to model
-                        result.Meshes.Add(mesh);
-                    }
+                    LoadMeshHeaders(ref result, fileStream);
                 }
                 catch (Exception e)
                 {
@@ -46,11 +40,18 @@ namespace PanzerEliteModelLoaderCSharp
             return result;
         }
 
-        private static RrfMesh LoadMesh(FileStream fileStream, int meshIndex)
+        private static void LoadMeshHeaders(ref RrfModel rrfModel, FileStream fileStream)
         {
-            var startingAddress = fileStream.Position;
-            var mesh = new RrfMesh();
-            
+            for (var i = 0; i < rrfModel.MeshCount; i++)
+            {
+                rrfModel.Meshes.Add(LoadMeshHeader(fileStream));
+            }
+        }
+
+        private static RrfMesh LoadMeshHeader(FileStream fileStream)
+        {
+            var mesh = new RrfMesh {startAddress = fileStream.Position.ToString("x8")};
+
             // Read mesh name at 0x14
             const int maxNameLength = 0xC;
 
@@ -107,6 +108,7 @@ namespace PanzerEliteModelLoaderCSharp
                 mesh.UnknownPatternInts.Add(patternSet);
             }
             
+            mesh.endAddress = fileStream.Position.ToString("x8");
             return mesh;
         }
     }

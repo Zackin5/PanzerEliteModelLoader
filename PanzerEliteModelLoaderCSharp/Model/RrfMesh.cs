@@ -11,6 +11,9 @@ namespace PanzerEliteModelLoaderCSharp.Model
             UnknownPatternInts = new List<List<int>>();
         }
 
+        public string startAddress;
+        public string endAddress;
+
         // Ordered by appearance in file
         public string Name;
         public int Type;

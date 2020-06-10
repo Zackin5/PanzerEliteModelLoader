@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace PanzerEliteModelLoaderCSharp
@@ -12,8 +10,9 @@ namespace PanzerEliteModelLoaderCSharp
         static void Main(string[] args)
         {
             string[] modelPaths = {
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriTank.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriTank.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
@@ -39,6 +38,7 @@ namespace PanzerEliteModelLoaderCSharp
                 foreach (var modelMesh in model.Meshes)
                 {
                     Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount);
+                    Console.WriteLine($" Range {modelMesh.startAddress} to {modelMesh.endAddress}");
 
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {
