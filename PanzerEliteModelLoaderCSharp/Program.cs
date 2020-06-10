@@ -1,5 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace PanzerEliteModelLoaderCSharp
 {
@@ -22,18 +26,20 @@ namespace PanzerEliteModelLoaderCSharp
 
             foreach (var modelPath in modelPaths)
             {
-                Console.WriteLine($"Loading Model {modelPath}");
+                var fileName = Path.GetFileName(modelPath);
+
+                Console.WriteLine($"Loading Model {fileName}");
+
                 var model = RrfLoader.LoadModel(modelPath);
-                Console.WriteLine($"Unknown int value {model.UnknownInt}, {model.MeshCount} Meshes");
+
+                Console.WriteLine($"{model.MeshCount} Meshes, {model.VertexCount} Vertexes");
+                Console.WriteLine($"Unknown Int {model.UnknownInt}, Unknown Int2 {model.UnknownInt2}, Unknown Int3 {model.UnknownInt3}");
+                Console.WriteLine($"            {model.UnknownInt:X},              {model.UnknownInt2:X},              {model.UnknownInt3:X}");
 
                 foreach (var modelMesh in model.Meshes)
                 {
                     Console.WriteLine("\"{0}\", type ID {1}", modelMesh.Name, modelMesh.Type);
-                    Console.WriteLine("{0} Vertices", modelMesh.VertexCount);
-
-                    Console.WriteLine($"Unknown header numbers [{string.Join(", ", modelMesh.UnknownHeaderInts)}]");
-                    Console.WriteLine($"                       [{string.Join(", ", modelMesh.UnknownHeaderInts.Select(f => f.ToString("X")))}]");
-
+                    
                     Console.WriteLine($"Unknown type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
                     Console.WriteLine($"                   [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
                     
@@ -44,6 +50,13 @@ namespace PanzerEliteModelLoaderCSharp
                 }
 
                 Console.WriteLine();
+
+                var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+
+                if (!Directory.Exists("./../../../dump/"))
+                    Directory.CreateDirectory("./../../../dump/");
+
+                File.WriteAllText($"./../../../dump/{fileName}.json", json);
             }
         }
     }

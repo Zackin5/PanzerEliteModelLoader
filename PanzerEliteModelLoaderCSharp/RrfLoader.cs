@@ -23,6 +23,10 @@ namespace PanzerEliteModelLoaderCSharp
 
                     result.UnknownInt = fileStream.ReadInt32();
                     result.MeshCount = fileStream.ReadInt32();
+                    result.VertexCount = fileStream.ReadInt32();
+                    result.UnknownInt2 = fileStream.ReadInt32();
+                    result.UnknownInt3 = fileStream.ReadInt32();
+
                     result.Meshes = new List<RrfMesh>();
 
                     for (var i = 0; i < result.MeshCount; i++)
@@ -47,18 +51,10 @@ namespace PanzerEliteModelLoaderCSharp
             var startingAddress = fileStream.Position;
             var mesh = new RrfMesh
             {
-                UnknownHeaderInts = new List<int>(), UnknownInts = new List<int>(),
+                UnknownInts = new List<int>(),
                 UnknownTypeBytes = new List<int>()
             };
-
-            mesh.VertexCount = fileStream.ReadInt32();
-
-            // Read unknown header ints
-            for (var i = 0; i < 2; i++)
-            {
-                mesh.UnknownHeaderInts.Add(fileStream.ReadInt32());
-            }
-
+            
             // Read mesh name at 0x14
             const int maxNameLength = 0xC;
 
@@ -91,7 +87,7 @@ namespace PanzerEliteModelLoaderCSharp
             // Skip terminating(?) FF FF FF FF bytes
             fileStream.Seek(0x4, SeekOrigin.Current);
 
-            for (var i = 0; i < 0x198 / 4; i++)
+            for (var i = 0; i < 0x1A4 / 4; i++)
             {
                 mesh.UnknownInts.Add(fileStream.ReadInt32());
             }
