@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriTank.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
@@ -39,7 +41,7 @@ namespace PanzerEliteModelLoaderCSharp
 
                 foreach (var modelMesh in model.Meshes)
                 {
-                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount);
+                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes, {3} Faces", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount, modelMesh.FaceCount);
                     Console.WriteLine($" Range {modelMesh.StartAddress} to {modelMesh.EndAddress}");
 
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
@@ -56,6 +58,9 @@ namespace PanzerEliteModelLoaderCSharp
                             $"                 [{string.Join(", ", modelMesh.UnknownInts.Select(f => f.ToString("X")))}]");
                     }
 
+                    if (IsListOfListDiff(modelMesh.UnknownPatternInts))
+                        Console.WriteLine(@" /!\ PATTERNED LIST HAS A DELTA /!\");
+
                     Console.WriteLine();
                 }
 
@@ -68,6 +73,21 @@ namespace PanzerEliteModelLoaderCSharp
 
                 File.WriteAllText($"./../../../dump/{fileName}.json", json);
             }
+        }
+
+        // Returns true if any row in a 2D list is different from another
+        private static bool IsListOfListDiff(List<List<int>> listOfLists)
+        {
+            for (var i = 0; i < listOfLists.Count - 1; i++)
+            {
+                for (var j = 0; j < listOfLists[i].Count; j++)
+                {
+                    if (listOfLists[i][j] != listOfLists[i + 1][j])
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

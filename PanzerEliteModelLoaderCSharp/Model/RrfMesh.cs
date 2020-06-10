@@ -10,7 +10,9 @@ namespace PanzerEliteModelLoaderCSharp.Model
             UnknownInts = new List<int>();
             UnknownTypeBytes = new List<int>();
             UnknownPatternInts = new List<List<int>>();
+            UnknownFacePatternInts = new List<List<int>>();
             UnknownVerts = new List<string>();
+            UnknownInts2 = new List<int>();
         }
 
         public string StartAddress;
@@ -28,6 +30,11 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public List<int> UnknownInts;   // Unknown mesh header integer values starting at 0x70
         public List<List<int>> UnknownPatternInts; // Unknown integer values with a repeating pattern
 
+        public int FaceCount;   // Taken from UnknownPatternInts[0][1]
+
+        public List<List<int>> UnknownFacePatternInts; // Unknown integer values with a repeating pattern, equal to face count?
+
         public List<string> UnknownVerts;  // Possible vertices values?
+        public List<int> UnknownInts2;   // Unknown mesh header integer values starting at 0x70
     }
 }

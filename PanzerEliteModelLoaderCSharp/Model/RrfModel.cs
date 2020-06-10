@@ -12,5 +12,7 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public int UnknownInt3; // Seems to ALWAYS be 00 01 00 00, end of header indicator?
 
         public List<RrfMesh> Meshes;
+
+        public string FinalHaltAddress;
     }
 }
