@@ -87,6 +87,16 @@ namespace PanzerEliteModelLoaderCSharp
                     }
                 }
             }
+            
+            // Retrieve vertex information
+            for (var i = 0; i < rrfModel.MeshCount; i++)
+            {
+                for (var j = 0; j < rrfModel.Meshes[i].VertexCount; j++)
+                {
+                    var vertex = new int3(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
+                    rrfModel.Meshes[i].Vertices.Add(vertex);
+                }
+            }
 
             // Read remaining unknown bytes
             do
@@ -107,15 +117,6 @@ namespace PanzerEliteModelLoaderCSharp
 
                 rrfModel.Meshes[0].UnknownInts2.Add(BitConverter.ToInt32(intBuffer));
             } while (true);
-
-            // Retrive vertex information
-            /*for (var i = 0; i < rrfModel.MeshCount; i++)
-            {
-                for (var j = 0; j < rrfModel.Meshes[i].VertexCount; j++)
-                {
-                    rrfModel.Meshes[i].UnknownVerts.Add($"[{fileStream.ReadInt32()}, {fileStream.ReadInt32()}, {fileStream.ReadInt32()}]");
-                }
-            }*/
 
 
             /*for (var i = 0; i < rrfModel.VertexTotal; i++)

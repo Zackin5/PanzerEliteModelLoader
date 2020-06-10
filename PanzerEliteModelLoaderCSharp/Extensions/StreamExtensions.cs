@@ -16,11 +16,11 @@ namespace PanzerEliteModelLoaderCSharp.Extensions
 
         public static float ReadFloat(this Stream stream)
         {
-            var intBuffer = new byte[4];
+            var floatBuffer = new byte[4];
 
-            stream.Read(intBuffer);
+            stream.Read(floatBuffer);
 
-            return BitConverter.ToSingle(intBuffer);
+            return BitConverter.ToSingle(floatBuffer);
         }
     }
 }

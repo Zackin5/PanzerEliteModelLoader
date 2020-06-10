@@ -6,7 +6,7 @@ namespace PanzerEliteModelLoaderCSharp.Model
     {
         public RrfMesh()
         {
-            Vertices = new List<float3>();
+            Vertices = new List<int3>();
             UnknownHeaders = new List<int>();
             UnknownTypeBytes = new List<int>();
             UnknownPattern = new List<List<int>>();
@@ -22,7 +22,7 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public string Name;
         public int Type;
 
-        public List<float3> Vertices;
+        public List<int3> Vertices;
 
         public List<int> UnknownTypeBytes; // Unknown bytes starting at 0x65
         public int VertexCount;
