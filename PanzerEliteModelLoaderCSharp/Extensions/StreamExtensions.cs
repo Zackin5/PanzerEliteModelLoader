@@ -13,5 +13,14 @@ namespace PanzerEliteModelLoaderCSharp.Extensions
 
             return BitConverter.ToInt32(intBuffer);
         }
+
+        public static float ReadFloat(this Stream stream)
+        {
+            var intBuffer = new byte[4];
+
+            stream.Read(intBuffer);
+
+            return BitConverter.ToSingle(intBuffer);
+        }
     }
 }

@@ -6,13 +6,15 @@ namespace PanzerEliteModelLoaderCSharp.Model
     {
         public RrfMesh()
         {
+            Vertices = new List<Vertex>();
             UnknownInts = new List<int>();
             UnknownTypeBytes = new List<int>();
             UnknownPatternInts = new List<List<int>>();
+            UnknownVerts = new List<string>();
         }
 
-        public string startAddress;
-        public string endAddress;
+        public string StartAddress;
+        public string EndAddress;
 
         // Ordered by appearance in file
         public string Name;
@@ -25,5 +27,7 @@ namespace PanzerEliteModelLoaderCSharp.Model
 
         public List<int> UnknownInts;   // Unknown mesh header integer values starting at 0x70
         public List<List<int>> UnknownPatternInts; // Unknown integer values with a repeating pattern
+
+        public List<string> UnknownVerts;  // Possible vertices values?
     }
 }

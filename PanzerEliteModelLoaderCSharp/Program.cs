@@ -13,7 +13,9 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriTank.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF",
@@ -38,7 +40,7 @@ namespace PanzerEliteModelLoaderCSharp
                 foreach (var modelMesh in model.Meshes)
                 {
                     Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount);
-                    Console.WriteLine($" Range {modelMesh.startAddress} to {modelMesh.endAddress}");
+                    Console.WriteLine($" Range {modelMesh.StartAddress} to {modelMesh.EndAddress}");
 
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {

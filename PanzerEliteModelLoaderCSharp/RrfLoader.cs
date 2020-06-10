@@ -29,7 +29,7 @@ namespace PanzerEliteModelLoaderCSharp
 
                     result.Meshes = new List<RrfMesh>();
 
-                    LoadMeshHeaders(ref result, fileStream);
+                    LoadMesh(ref result, fileStream);
                 }
                 catch (Exception e)
                 {
@@ -40,17 +40,35 @@ namespace PanzerEliteModelLoaderCSharp
             return result;
         }
 
-        private static void LoadMeshHeaders(ref RrfModel rrfModel, FileStream fileStream)
+        private static void LoadMesh(ref RrfModel rrfModel, FileStream fileStream)
         {
+            // Load header info
             for (var i = 0; i < rrfModel.MeshCount; i++)
             {
                 rrfModel.Meshes.Add(LoadMeshHeader(fileStream));
             }
+
+            var headerEndPos = fileStream.Position;
+            
+            // Retrieve vertex information
+            for (var i = 0; i < rrfModel.MeshCount; i++)
+            {
+                for (var j = 0; j < rrfModel.Meshes[i].VertexCount; j++)
+                {
+                    rrfModel.Meshes[i].UnknownVerts.Add($"[{fileStream.ReadInt32()}, {fileStream.ReadInt32()}, {fileStream.ReadInt32()}]");
+                }
+            }
+
+            /*for (var i = 0; i < rrfModel.VertexTotal; i++)
+            {
+                var vertex = new Vertex(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
+                rrfModel.Meshes[0].Vertices.Add(vertex);
+            }*/
         }
 
         private static RrfMesh LoadMeshHeader(FileStream fileStream)
         {
-            var mesh = new RrfMesh {startAddress = fileStream.Position.ToString("x8")};
+            var mesh = new RrfMesh {StartAddress = fileStream.Position.ToString("x8")};
 
             // Read mesh name at 0x14
             const int maxNameLength = 0xC;
@@ -108,7 +126,7 @@ namespace PanzerEliteModelLoaderCSharp
                 mesh.UnknownPatternInts.Add(patternSet);
             }
             
-            mesh.endAddress = fileStream.Position.ToString("x8");
+            mesh.EndAddress = fileStream.Position.ToString("x8");
             return mesh;
         }
     }
