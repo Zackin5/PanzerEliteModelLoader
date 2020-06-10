@@ -39,12 +39,20 @@ namespace PanzerEliteModelLoaderCSharp
                 foreach (var modelMesh in model.Meshes)
                 {
                     Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount);
-                    
-                    Console.WriteLine($" Unknown type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
-                    Console.WriteLine($"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
-                    
-                    //Console.WriteLine($"Unknown numbers [{string.Join(", ", modelMesh.UnknownInts)}]");
-                    //Console.WriteLine($"                [{string.Join(", ", modelMesh.UnknownInts.Select(f => f.ToString("X")))}]");
+
+                    if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
+                    {
+                        Console.WriteLine($" Unknown type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
+                        Console.WriteLine(
+                            $"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
+                    }
+
+                    if (modelMesh.UnknownInts.Any(n => n != 0))
+                    {
+                        Console.WriteLine($" Unknown numbers [{string.Join(", ", modelMesh.UnknownInts)}]");
+                        Console.WriteLine(
+                            $"                 [{string.Join(", ", modelMesh.UnknownInts.Select(f => f.ToString("X")))}]");
+                    }
 
                     Console.WriteLine();
                 }

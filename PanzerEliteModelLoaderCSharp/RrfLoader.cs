@@ -49,11 +49,7 @@ namespace PanzerEliteModelLoaderCSharp
         private static RrfMesh LoadMesh(FileStream fileStream, int meshIndex)
         {
             var startingAddress = fileStream.Position;
-            var mesh = new RrfMesh
-            {
-                UnknownInts = new List<int>(),
-                UnknownTypeBytes = new List<int>()
-            };
+            var mesh = new RrfMesh();
             
             // Read mesh name at 0x14
             const int maxNameLength = 0xC;
@@ -89,9 +85,26 @@ namespace PanzerEliteModelLoaderCSharp
             // Skip terminating(?) FF FF FF FF bytes
             fileStream.Seek(0x4, SeekOrigin.Current);
 
-            for (var i = 0; i < 0x1A4 / 4; i++)
+            // Read unknown ints
+            const int unknownIntCount = 33;
+            for (var i = 0; i < unknownIntCount; i++)
             {
                 mesh.UnknownInts.Add(fileStream.ReadInt32());
+            }
+
+            // Read pattern ints
+            const int numberOfIntsInPattern = 9;
+            const int patternCount = 72 / numberOfIntsInPattern;
+            for (var i = 0; i < patternCount; i++)
+            {
+                var patternSet = new List<int>();
+
+                for (var j = 0; j < numberOfIntsInPattern; j++)
+                {
+                    patternSet.Add(fileStream.ReadInt32());
+                }
+
+                mesh.UnknownPatternInts.Add(patternSet);
             }
             
             return mesh;
