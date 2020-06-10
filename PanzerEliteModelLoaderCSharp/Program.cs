@@ -18,6 +18,7 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeRot.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF",
@@ -51,14 +52,14 @@ namespace PanzerEliteModelLoaderCSharp
                             $"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
                     }
 
-                    if (modelMesh.UnknownInts.Any(n => n != 0))
+                    if (modelMesh.UnknownHeaders.Any(n => n != 0))
                     {
-                        Console.WriteLine($" Unknown numbers [{string.Join(", ", modelMesh.UnknownInts)}]");
+                        Console.WriteLine($" Unknown numbers [{string.Join(", ", modelMesh.UnknownHeaders)}]");
                         Console.WriteLine(
-                            $"                 [{string.Join(", ", modelMesh.UnknownInts.Select(f => f.ToString("X")))}]");
+                            $"                 [{string.Join(", ", modelMesh.UnknownHeaders.Select(f => f.ToString("X")))}]");
                     }
 
-                    if (IsListOfListDiff(modelMesh.UnknownPatternInts))
+                    if (IsListOfListDiff(modelMesh.UnknownPattern))
                         Console.WriteLine(@" /!\ PATTERNED LIST HAS A DELTA /!\");
 
                     Console.WriteLine();

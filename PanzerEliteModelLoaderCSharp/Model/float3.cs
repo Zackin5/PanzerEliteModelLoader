@@ -1,8 +1,8 @@
 ﻿namespace PanzerEliteModelLoaderCSharp.Model
 {
-    public class Vertex
+    public struct float3
     {
-        public Vertex(float x = 0, float y = 0, float z = 0)
+        public float3(float x = 0, float y = 0, float z = 0)
         {
             X = x;
             Y = y;

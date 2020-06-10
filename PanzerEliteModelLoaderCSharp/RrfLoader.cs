@@ -51,23 +51,43 @@ namespace PanzerEliteModelLoaderCSharp
             var headerEndPos = fileStream.Position;
             
             // Retrieve face information
-            const int facePatternSize = 5;
-
             for (var i = 0; i < rrfModel.MeshCount; i++)
             {
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
                 {
-                    var facePattern = new List<int>();
-
-                    for (var k = 0; k <= facePatternSize; k++)
+                    var face = new RrfFace
                     {
-                        facePattern.Add(fileStream.ReadInt32());
+                        VertexIndexes =
+                        {
+                            [0] = fileStream.ReadInt32(),
+                            [1] = fileStream.ReadInt32(),
+                            [2] = fileStream.ReadInt32()
+                        }
+                    };
+
+                    const int unknownFaceIntCount = 2;
+                    for (var k = 0; k <= unknownFaceIntCount; k++)
+                    {
+                        face.Unknown.Add(fileStream.ReadInt32());
                     }
 
-                    rrfModel.Meshes[i].UnknownFacePatternInts.Add(facePattern);
+                    rrfModel.Meshes[i].Faces.Add(face);
                 }
             }
 
+            // Retrieve face normals
+            for (var i = 0; i < rrfModel.MeshCount; i++)
+            {
+                for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
+                {
+                    rrfModel.Meshes[i].Faces[j].Normal = new int3(
+                        fileStream.ReadInt32(), 
+                        fileStream.ReadInt32(),
+                        fileStream.ReadInt32());
+                }
+            }
+
+            // Read remaining unknown bytes
             do
             {
                 var intBuffer = new byte[4];
@@ -99,7 +119,7 @@ namespace PanzerEliteModelLoaderCSharp
 
             /*for (var i = 0; i < rrfModel.VertexTotal; i++)
             {
-                var vertex = new Vertex(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
+                var vertex = new float3(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
                 rrfModel.Meshes[0].Vertices.Add(vertex);
             }*/
 
@@ -148,7 +168,7 @@ namespace PanzerEliteModelLoaderCSharp
             const int unknownIntCount = 33;
             for (var i = 0; i < unknownIntCount; i++)
             {
-                mesh.UnknownInts.Add(fileStream.ReadInt32());
+                mesh.UnknownHeaders.Add(fileStream.ReadInt32());
             }
 
             // Read pattern ints
@@ -163,10 +183,10 @@ namespace PanzerEliteModelLoaderCSharp
                     patternSet.Add(fileStream.ReadInt32());
                 }
 
-                mesh.UnknownPatternInts.Add(patternSet);
+                mesh.UnknownPattern.Add(patternSet);
             }
 
-            mesh.FaceCount = mesh.UnknownPatternInts[0][1];
+            mesh.FaceCount = mesh.UnknownPattern[0][1];
             
             mesh.EndAddress = fileStream.Position.ToString("x8");
             return mesh;
