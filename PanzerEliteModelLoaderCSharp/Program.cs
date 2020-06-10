@@ -32,16 +32,16 @@ namespace PanzerEliteModelLoaderCSharp
 
                 var model = RrfLoader.LoadModel(modelPath);
 
-                Console.WriteLine($"{model.MeshCount} Meshes, {model.VertexCount} Vertexes");
+                Console.WriteLine($"{model.MeshCount} Meshes, {model.VertexTotal} Vertexes total");
                 Console.WriteLine($"Unknown Int {model.UnknownInt}, Unknown Int2 {model.UnknownInt2}, Unknown Int3 {model.UnknownInt3}");
                 Console.WriteLine($"            {model.UnknownInt:X},              {model.UnknownInt2:X},              {model.UnknownInt3:X}");
 
                 foreach (var modelMesh in model.Meshes)
                 {
-                    Console.WriteLine("\"{0}\", type ID {1}", modelMesh.Name, modelMesh.Type);
+                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount);
                     
-                    Console.WriteLine($"Unknown type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
-                    Console.WriteLine($"                   [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
+                    Console.WriteLine($" Unknown type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
+                    Console.WriteLine($"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
                     
                     //Console.WriteLine($"Unknown numbers [{string.Join(", ", modelMesh.UnknownInts)}]");
                     //Console.WriteLine($"                [{string.Join(", ", modelMesh.UnknownInts.Select(f => f.ToString("X")))}]");

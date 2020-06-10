@@ -23,7 +23,7 @@ namespace PanzerEliteModelLoaderCSharp
 
                     result.UnknownInt = fileStream.ReadInt32();
                     result.MeshCount = fileStream.ReadInt32();
-                    result.VertexCount = fileStream.ReadInt32();
+                    result.VertexTotal = fileStream.ReadInt32();
                     result.UnknownInt2 = fileStream.ReadInt32();
                     result.UnknownInt3 = fileStream.ReadInt32();
 
@@ -79,10 +79,12 @@ namespace PanzerEliteModelLoaderCSharp
             mesh.Type = fileStream.ReadByte();
 
             // Read unknown type bytes
-            for (var i = 0; i < 0x7; i++)
+            for (var i = 0; i < 0x3; i++)
             {
                 mesh.UnknownTypeBytes.Add(fileStream.ReadByte());
             }
+            
+            mesh.VertexCount = fileStream.ReadInt32();
 
             // Skip terminating(?) FF FF FF FF bytes
             fileStream.Seek(0x4, SeekOrigin.Current);
