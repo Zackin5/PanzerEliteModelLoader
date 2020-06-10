@@ -65,8 +65,8 @@ namespace PanzerEliteModelLoaderCSharp
                         }
                     };
 
-                    const int unknownFaceIntCount = 2;
-                    for (var k = 0; k <= unknownFaceIntCount; k++)
+                    const int unknownFaceIntCount = 3;
+                    for (var k = 0; k < unknownFaceIntCount; k++)
                     {
                         face.Unknown.Add(fileStream.ReadInt32());
                     }
@@ -75,15 +75,16 @@ namespace PanzerEliteModelLoaderCSharp
                 }
             }
 
-            // Retrieve face normals
+            // Retrieve unknown face ints
             for (var i = 0; i < rrfModel.MeshCount; i++)
             {
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
                 {
-                    rrfModel.Meshes[i].Faces[j].Normal = new int3(
-                        fileStream.ReadInt32(), 
-                        fileStream.ReadInt32(),
-                        fileStream.ReadInt32());
+                    const int unknownIntCount = 3;
+                    for (var k = 0; k < unknownIntCount; k++)
+                    {
+                        rrfModel.Meshes[i].Faces[j].Unknown2.Add(fileStream.ReadInt32());
+                    }
                 }
             }
 
