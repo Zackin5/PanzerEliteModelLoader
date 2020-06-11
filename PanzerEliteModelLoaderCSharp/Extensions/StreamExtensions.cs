@@ -22,5 +22,10 @@ namespace PanzerEliteModelLoaderCSharp.Extensions
 
             return BitConverter.ToSingle(floatBuffer);
         }
+
+        public static string GetPositionAddress(this Stream stream)
+        {
+            return stream.Position.ToString("x8");
+        }
     }
 }

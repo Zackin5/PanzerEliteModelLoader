@@ -23,14 +23,16 @@ namespace PanzerEliteModelLoaderCSharp
         }
 
         // Code lifted from https://wiki.unity3d.com/index.php/ExportOBJ
-        public static string ModelToString(RrfModel model)
+        public static string ModelToString(RrfModel model, bool triangulateQuads = false)
         {
             var sb = new StringBuilder();
 
             foreach (var mesh in model.Meshes)
             {
-                sb.Append($"o {mesh.Name}\n");
+                sb.AppendLine($"o {mesh.Name}");
+                sb.AppendLine($"# Header Range {mesh.HeaderAddressRange.Start} to {mesh.HeaderAddressRange.End}");
 
+                sb.AppendLine($"# {mesh.VertexAddressRange.Start}");
                 foreach (var v in mesh.Vertices)
                 {
                     var floatv = new float3(v);
@@ -39,15 +41,29 @@ namespace PanzerEliteModelLoaderCSharp
                     floatv /= 1000;
                     floatv /= 1000;
 
-                    sb.Append($"v {floatv.X} {floatv.Z} {-floatv.Y}\n");
+                    sb.AppendLine($"v {floatv.X} {floatv.Z} {-floatv.Y}");
                 }
+                sb.AppendLine($"# {mesh.VertexAddressRange.End}");
 
+                sb.AppendLine($"# {mesh.FaceAddressRange.Start}");
                 foreach (var face in mesh.Faces)
                 {
-                    sb.Append($"f {face.VertexIndexes[0]+1} {face.VertexIndexes[1]+1} {face.VertexIndexes[2]+1}\n");
-                }
+                    sb.AppendLine($"f {face.VertexIndexes[0]+1} {face.VertexIndexes[1]+1} {face.VertexIndexes[2]+1}");
 
-                sb.Append("\n");
+                    if (!triangulateQuads ||
+                        face.VertexIndexes[3] == -1 || 
+                        face.VertexIndexes[3] == face.VertexIndexes[0] ||
+                        face.VertexIndexes[3] == face.VertexIndexes[1] ||
+                        face.VertexIndexes[3] == face.VertexIndexes[2]) 
+                        continue;
+
+                    // Triangulate quads
+                    sb.AppendLine("# QUAD v");
+                    sb.AppendLine($"f {face.VertexIndexes[0]+1} {face.VertexIndexes[2]+1} {face.VertexIndexes[3]+1}");
+                }
+                sb.AppendLine($"# {mesh.FaceAddressRange.End}");
+
+                sb.AppendLine();
             }
 
             return sb.ToString();

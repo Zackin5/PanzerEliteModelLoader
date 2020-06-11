@@ -11,19 +11,19 @@ namespace PanzerEliteModelLoaderCSharp.Model
             UnknownTypeBytes = new List<int>();
             UnknownPattern = new List<List<int>>();
             Faces = new List<RrfFace>();
-            UnknownVerts = new List<string>();
-            UnknownInts2 = new List<int>();
+            HeaderAddressRange = new AddressRange();
+            VertexAddressRange = new AddressRange();
+            FaceAddressRange = new AddressRange();
         }
 
-        public string StartAddress;
-        public string EndAddress;
+        public AddressRange HeaderAddressRange;
+        public AddressRange VertexAddressRange;
+        public AddressRange FaceAddressRange;
 
         // Ordered by appearance in file
         public string Name;
         public int Type;
-
-        public List<int3> Vertices;
-
+        
         public List<int> UnknownTypeBytes; // Unknown bytes starting at 0x65
         public int VertexCount;
 
@@ -33,8 +33,6 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public int FaceCount;   // Taken from UnknownPattern[0][1]
 
         public List<RrfFace> Faces;
-
-        public List<string> UnknownVerts;  // Possible vertices values?
-        public List<int> UnknownInts2;   // Unknown mesh header integer values starting at 0x70
+        public List<int3> Vertices;
     }
 }
