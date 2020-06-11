@@ -73,6 +73,8 @@ namespace PanzerEliteModelLoaderCSharp
                     Directory.CreateDirectory("./../../../dump/");
 
                 File.WriteAllText($"./../../../dump/{fileName}.json", json);
+
+                RrfExporter.Export(model, $"E:/GOG/Panzer Elite/files/modelHacks/odump/{fileName}.obj");
             }
         }
 
