@@ -1,5 +1,6 @@
 ﻿
 using System.IO;
+using System.Linq;
 using System.Text;
 using PanzerEliteModelLoaderCSharp.Model;
 
@@ -56,10 +57,7 @@ namespace PanzerEliteModelLoaderCSharp
                 sb.AppendLine($"# {mesh.FaceAddressRange.Start}");
                 foreach (var face in mesh.Faces)
                 {
-                    var vertexIndexOffset = 1;
-
-                    if (index > 0)
-                        vertexIndexOffset += model.Meshes[index - 1].VertexCount;
+                    var vertexIndexOffset = 1 + model.Meshes.Take(index).Sum(f => f.VertexCount);
 
                     sb.AppendLine(
                         $"f {face.VertexIndexes[0] + vertexIndexOffset}" +

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PanzerEliteModelLoaderCSharp.Extensions;
 using PanzerEliteModelLoaderCSharp.Model;
 
@@ -43,14 +44,125 @@ namespace PanzerEliteModelLoaderCSharp
         private static void LoadMesh(ref RrfModel rrfModel, FileStream fileStream)
         {
             // Load header info
-            for (var i = 0; i < rrfModel.MeshCount; i++)
-            {
-                rrfModel.Meshes.Add(LoadMeshHeader(fileStream));
-            }
+            LoadMeshHeaders(ref rrfModel, ref fileStream);
             
             // Retrieve face information
+            LoadMeshFaces(ref rrfModel, ref fileStream);
+
+            // Read remaining unknown bytes
+            rrfModel.UnknownAddressRange.Start = fileStream.Position.ToString("x8");
+
+            do
+            {
+                var intBuffer = new byte[4];
+
+                fileStream.Read(intBuffer);
+
+                if ((intBuffer[0] == 0x0 &&
+                     intBuffer[1] == 0xFF &&
+                     intBuffer[2] == 0x0 &&
+                     intBuffer[3] == 0xFF) ||
+                    (intBuffer[0] == 0xFF &&
+                     intBuffer[1] == 0x0 &&
+                     intBuffer[2] == 0xFF &&
+                     intBuffer[3] == 0x0))
+                    break;
+
+                rrfModel.UnknownEnding.Add(BitConverter.ToInt32(intBuffer));
+            } while (fileStream.Position < fileStream.Length);
+
+            rrfModel.UnknownAddressRange.End = fileStream.Position.ToString("x8");
+        }
+
+        private static void LoadMeshHeaders(ref RrfModel rrfModel, ref FileStream fileStream)
+        {
+            for (var meshIndex = 0; meshIndex < rrfModel.MeshCount; meshIndex++)
+            {
+                var mesh = new RrfMesh
+                {
+                    HeaderAddressRange = new AddressRange
+                    {
+                        Start = fileStream.Position.ToString("x8")
+                    }
+                };
+
+                // Read mesh name at 0x14
+                const int maxNameLength = 0xC;
+
+                for (var i = 0; i < maxNameLength; i++)
+                {
+                    var nByte = fileStream.ReadByte();
+
+                    // Escape on first 0 byte
+                    if (nByte == 0x0)
+                        break;
+
+                    mesh.Name += (char) nByte;
+                }
+
+                // Skip mesh name field & unknown numbers starting at address 0x20
+                var nameOffset = maxNameLength - mesh.Name.Length - 1; // Minus one because we read a null byte
+
+                const int unknownNumbersOffset = 0x44;
+                fileStream.Seek(nameOffset + unknownNumbersOffset, SeekOrigin.Current);
+
+                // Mesh type byte at 0x64
+                mesh.Type = fileStream.ReadByte();
+
+                // Read unknown type bytes
+                for (var i = 0; i < 0x3; i++)
+                {
+                    mesh.UnknownTypeBytes.Add(fileStream.ReadByte());
+                }
+
+                mesh.VertexCount = fileStream.ReadInt32();
+
+                // Skip terminating(?) FF FF FF FF bytes
+                fileStream.Seek(0x4, SeekOrigin.Current);
+
+                // Read unknown ints
+                const int unknownIntCount = 33;
+                for (var i = 0; i < unknownIntCount; i++)
+                {
+                    mesh.UnknownHeaders.Add(fileStream.ReadInt32());
+                }
+
+                // Read pattern ints
+                const int numberOfIntsInPattern = 9;
+                const int patternCount = 72 / numberOfIntsInPattern;
+                for (var i = 0; i < patternCount; i++)
+                {
+                    var patternSet = new List<int>();
+
+                    for (var j = 0; j < numberOfIntsInPattern; j++)
+                    {
+                        patternSet.Add(fileStream.ReadInt32());
+                    }
+
+                    mesh.UnknownPattern.Add(patternSet);
+                }
+
+                mesh.FaceCount = mesh.UnknownPattern[0][1];
+
+                mesh.HeaderAddressRange.End = fileStream.Position.ToString("x8");
+                
+                rrfModel.Meshes.Add(mesh);
+            }
+        }
+        
+        private static void LoadMeshFaces(ref RrfModel rrfModel, ref FileStream fileStream)
+        {
             for (var i = 0; i < rrfModel.MeshCount; i++)
             {
+                if (i > 0)
+                {
+                    // Brute force seek to the next face location
+                    rrfModel.Meshes[i].FaceSkipAddressRange.Start = fileStream.GetPositionAddress();
+                    SeekNextFaces(rrfModel.Meshes[i], ref fileStream);
+                    rrfModel.Meshes[i].FaceSkipAddressRange.End = fileStream.GetPositionAddress();
+                }
+
+                // Retrieve face vertex information
                 rrfModel.Meshes[i].FaceAddressRange.Start = fileStream.GetPositionAddress();
 
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
@@ -76,7 +188,6 @@ namespace PanzerEliteModelLoaderCSharp
                 }
 
                 rrfModel.Meshes[i].FaceAddressRange.End = fileStream.GetPositionAddress();
-
 
                 // Retrieve unknown face ints
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
@@ -110,103 +221,56 @@ namespace PanzerEliteModelLoaderCSharp
                     rrfModel.Meshes[i].UnknownPostFace.Add(fileStream.ReadInt32());
                 }*/
             }
-
-            // Retrieve unknown face3 information
-            rrfModel.UnknownAddressRange.Start = fileStream.Position.ToString("x8");
-
-            // Read remaining unknown bytes
-            do
-            {
-                var intBuffer = new byte[4];
-
-                fileStream.Read(intBuffer);
-
-                if ((intBuffer[0] == 0x0 &&
-                     intBuffer[1] == 0xFF &&
-                     intBuffer[2] == 0x0 &&
-                     intBuffer[3] == 0xFF) ||
-                    (intBuffer[0] == 0xFF &&
-                     intBuffer[1] == 0x0 &&
-                     intBuffer[2] == 0xFF &&
-                     intBuffer[3] == 0x0))
-                    break;
-
-                rrfModel.UnknownEnding.Add(BitConverter.ToInt32(intBuffer));
-            } while (fileStream.Position < fileStream.Length);
-
-            rrfModel.UnknownAddressRange.End = fileStream.Position.ToString("x8");
         }
-        
-        private static RrfMesh LoadMeshHeader(FileStream fileStream)
+
+        /// <summary>
+        /// This method attempts to brute seek the next set of face indexes to load,
+        /// since I haven't figured out the pattern of the bytes separating them yet
+        /// </summary>
+        /// <param name="rrfMeshInfo"></param>
+        /// <param name="fileStream"></param>
+        private static void SeekNextFaces(RrfMesh rrfMeshInfo, ref FileStream fileStream)
         {
-            var mesh = new RrfMesh
+            var foundFaces = false;
+            var maxVertexIndex = rrfMeshInfo.VertexCount;
+
+            resetLoop:
+            while (!foundFaces && fileStream.Position < fileStream.Length)
             {
-                HeaderAddressRange = new AddressRange
+                var resetAddress = fileStream.Position;
+                
+                for (var i = 0; i < rrfMeshInfo.FaceCount; i++)
                 {
-                    Start = fileStream.Position.ToString("x8")
-                }
-            };
+                    var readVertices = new[] {-1, -1, -1, -1, -1};
 
-            // Read mesh name at 0x14
-            const int maxNameLength = 0xC;
+                    // Test vertex indexes 1,2,3 and 4
+                    for (var j = 0; j < 5; j++)
+                    {
+                        var vertexIndex = fileStream.ReadInt32();
 
-            for (var i = 0; i < maxNameLength; i++)
-            {
-                var nByte = fileStream.ReadByte();
+                        if (vertexIndex < maxVertexIndex
+                            && vertexIndex >= 0
+                            && !readVertices.Contains(vertexIndex)
+                            || j == 3) // Skip testing unknown var at j == 3
+                        {
+                            readVertices[j] = vertexIndex;
+                            continue;
+                        }
 
-                // Escape on first 0 byte
-                if (nByte == 0x0)
-                    break;
+                        fileStream.Position = resetAddress + 4;
+                        goto resetLoop;
+                    }
 
-                mesh.Name += (char)nByte;
-            }
-
-            // Skip mesh name field & unknown numbers starting at address 0x20
-            var nameOffset = maxNameLength - mesh.Name.Length - 1;  // Minus one because we read a null byte
-            
-            const int unknownNumbersOffset = 0x44;
-            fileStream.Seek(nameOffset + unknownNumbersOffset, SeekOrigin.Current);
-
-            // Mesh type byte at 0x64
-            mesh.Type = fileStream.ReadByte();
-
-            // Read unknown type bytes
-            for (var i = 0; i < 0x3; i++)
-            {
-                mesh.UnknownTypeBytes.Add(fileStream.ReadByte());
-            }
-            
-            mesh.VertexCount = fileStream.ReadInt32();
-
-            // Skip terminating(?) FF FF FF FF bytes
-            fileStream.Seek(0x4, SeekOrigin.Current);
-
-            // Read unknown ints
-            const int unknownIntCount = 33;
-            for (var i = 0; i < unknownIntCount; i++)
-            {
-                mesh.UnknownHeaders.Add(fileStream.ReadInt32());
-            }
-
-            // Read pattern ints
-            const int numberOfIntsInPattern = 9;
-            const int patternCount = 72 / numberOfIntsInPattern;
-            for (var i = 0; i < patternCount; i++)
-            {
-                var patternSet = new List<int>();
-
-                for (var j = 0; j < numberOfIntsInPattern; j++)
-                {
-                    patternSet.Add(fileStream.ReadInt32());
+                    // Render properties
+                    fileStream.ReadInt32();
                 }
 
-                mesh.UnknownPattern.Add(patternSet);
-            }
+                // If we escaped the for loop then we pattern matched all faces
+                foundFaces = true;
 
-            mesh.FaceCount = mesh.UnknownPattern[0][1];
-            
-            mesh.HeaderAddressRange.End = fileStream.Position.ToString("x8");
-            return mesh;
+                // Reset the stream position to where we started so the faces are read by followup logic
+                fileStream.Position = resetAddress;
+            }
         }
     }
 }

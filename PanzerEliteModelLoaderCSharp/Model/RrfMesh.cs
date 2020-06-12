@@ -15,11 +15,13 @@ namespace PanzerEliteModelLoaderCSharp.Model
             HeaderAddressRange = new AddressRange();
             VertexAddressRange = new AddressRange();
             FaceAddressRange = new AddressRange();
+            FaceSkipAddressRange = new AddressRange();
         }
 
-        public AddressRange HeaderAddressRange;
-        public AddressRange VertexAddressRange;
-        public AddressRange FaceAddressRange;
+        public AddressRange HeaderAddressRange;     // Address range for header information
+        public AddressRange VertexAddressRange;     // Address range for vertex information
+        public AddressRange FaceAddressRange;       // Address range for face information
+        public AddressRange FaceSkipAddressRange;   // Addresses skipped to get to faces
 
         // Ordered by appearance in file
         public string Name;

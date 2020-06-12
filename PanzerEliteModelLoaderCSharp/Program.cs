@@ -11,6 +11,7 @@ namespace PanzerEliteModelLoaderCSharp
         static void Main(string[] args)
         {
             string[] modelPaths = {
+                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSF.RRF",
@@ -37,7 +38,6 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\CustomA\\tiger.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF.OSTPAK REDUX",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSBridge.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignA.RRF.OSTPAK REDUX",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignB.RRF.OSTPAK REDUX",
