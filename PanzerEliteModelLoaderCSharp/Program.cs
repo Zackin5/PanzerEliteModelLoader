@@ -13,15 +13,23 @@ namespace PanzerEliteModelLoaderCSharp
             string[] modelPaths = {
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriTank.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSF.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSP.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSPt.RRF",
+
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1G.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1GM.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1N.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TR.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TRR.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TRR5.RRF",
+
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Shape.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeRot.RRF",
+
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF",
@@ -29,6 +37,10 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\CustomA\\tiger.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF.OSTPAK REDUX",
+                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF",
+                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSBridge.RRF",
+                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignA.RRF.OSTPAK REDUX",
+                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignB.RRF.OSTPAK REDUX",
             };
 
             foreach (var modelPath in modelPaths)
