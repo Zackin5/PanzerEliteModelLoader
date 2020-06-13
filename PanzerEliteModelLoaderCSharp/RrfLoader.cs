@@ -161,6 +161,7 @@ namespace PanzerEliteModelLoaderCSharp
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
                 {
 
+                    // Get face information
                     var face = new RrfFace
                     {
                         AddressRange = new AddressRange
@@ -183,10 +184,30 @@ namespace PanzerEliteModelLoaderCSharp
                         }
                     };
                     
-                    face.VertexIndexes[3] = fileStream.ReadInt32();
+                    face.VertexIndexes[3] = fileStream.ReadInt32(); // 4th vertex index is part of a properties set
 
-                    face.RenderProperties = (FaceRenderProperties)fileStream.ReadByte();
+                    // Get render properties
+                    var faceRenderProperties = (FaceRenderProperties) fileStream.ReadByte();
 
+                    face.IsQuad = (faceRenderProperties & FaceRenderProperties.IsQuad) == FaceRenderProperties.IsQuad;
+                    face.IsDoubleSided = (faceRenderProperties & FaceRenderProperties.IsDouble) == FaceRenderProperties.IsDouble;
+                    face.IsSprite = (faceRenderProperties & FaceRenderProperties.IsSprite) == FaceRenderProperties.IsSprite;
+                    face.IsUnknown8 = (faceRenderProperties & FaceRenderProperties.Unknown8) == FaceRenderProperties.Unknown8;
+
+                    // Get face shading value
+                    var faceShading = FaceShading.None;
+                    var wireframeShading = FaceRenderProperties.FlatShading | FaceRenderProperties.PhongShading;
+
+                    if ((faceRenderProperties & wireframeShading) == wireframeShading)
+                        faceShading = FaceShading.Wireframe;
+                    else if ((faceRenderProperties & FaceRenderProperties.FlatShading) == FaceRenderProperties.FlatShading)
+                        faceShading = FaceShading.Flat;
+                    else if ((faceRenderProperties & FaceRenderProperties.PhongShading) == FaceRenderProperties.PhongShading)
+                        faceShading = FaceShading.Phong;
+
+                    face.Shading = faceShading;
+
+                    // Read unknown
                     face.UnknownRenderProperties = new[]
                     {
                         fileStream.ReadByte(),
@@ -242,11 +263,28 @@ namespace PanzerEliteModelLoaderCSharp
 
                 rrfModel.Meshes[i].FaceSkipAddressRange.End = nextFaceStartPos.ToString("x8");
 
-                // Read unknown values before next faces
+                // Read unknown values before next faces as a 3xn grid
+                var gridIndex = 0;
+                var tempList = new List<int>();
+
                 while (fileStream.Position < nextFaceStartPos)
                 {
-                    rrfModel.Meshes[i].UnknownPostFace.Add(fileStream.ReadInt32());
+                    var value = fileStream.ReadInt32();
+
+                    if (gridIndex > 2)
+                    {
+                        gridIndex = 1;
+                        rrfModel.Meshes[i].UnknownPostFace.Add(tempList);
+                        tempList = new List<int>{value};
+                    }
+                    else
+                    {
+                        tempList.Add(value);
+                        gridIndex++;
+                    }
                 }
+
+                rrfModel.Meshes[i].UnknownPostFaceCount = rrfModel.Meshes[i].UnknownPostFace.Count;
             }
         }
 

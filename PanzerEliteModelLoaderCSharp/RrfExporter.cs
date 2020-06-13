@@ -25,7 +25,7 @@ namespace PanzerEliteModelLoaderCSharp
         }
 
         // Code lifted from https://wiki.unity3d.com/index.php/ExportOBJ
-        public static string ModelToString(RrfModel model, bool triangulateQuads = false, bool scaleMesh = true)
+        public static string ModelToString(RrfModel model, bool triangulateQuads = true, bool scaleMesh = true)
         {
             var sb = new StringBuilder();
 
@@ -66,7 +66,7 @@ namespace PanzerEliteModelLoaderCSharp
                         $" {face.VertexIndexes[2] + vertexIndexOffset}");
 
                     // Triangulate quads
-                    if((face.RenderProperties & FaceRenderProperties.IsQuad) != FaceRenderProperties.IsQuad)
+                    if(!face.IsQuad && !triangulateQuads)
                         continue;
 
                     sb.AppendLine("# QUAD v");

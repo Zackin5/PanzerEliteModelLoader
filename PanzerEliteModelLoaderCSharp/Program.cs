@@ -26,12 +26,13 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TRR5.RRF",
 
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Shape.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS2s.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeRot.RRF",
 
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\76netSplit.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aaWall2N.RRF",
@@ -57,7 +58,8 @@ namespace PanzerEliteModelLoaderCSharp
 
                 foreach (var modelMesh in model.Meshes)
                 {
-                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes, {3} Faces", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount, modelMesh.FaceCount);
+                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes, {3} Faces, {4} Unknown", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount, modelMesh.FaceCount, modelMesh.UnknownPostFaceCount);
+                    Console.WriteLine(" {0} Doubled faces, {1} non doubled", modelMesh.Faces.Count(f => f.IsDoubleSided), modelMesh.Faces.Count(f => !f.IsDoubleSided));
                     
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {
@@ -83,10 +85,12 @@ namespace PanzerEliteModelLoaderCSharp
 
                 var json = JsonConvert.SerializeObject(model, Formatting.Indented);
 
-                if (!Directory.Exists("./../../../dump/"))
-                    Directory.CreateDirectory("./../../../dump/");
+                var dumpDir = "E:\\GOG\\Panzer Elite\\files\\modelHacks\\dump\\";
 
-                File.WriteAllText($"./../../../dump/{fileName}.json", json);
+                if (!Directory.Exists(dumpDir))
+                    Directory.CreateDirectory(dumpDir);
+
+                File.WriteAllText( Path.Join(dumpDir, $"{fileName}.json"), json);
 
                 RrfExporter.Export(model, $"E:/GOG/Panzer Elite/files/modelHacks/odump/{fileName}.obj");
             }

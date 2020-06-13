@@ -6,10 +6,11 @@ namespace PanzerEliteModelLoaderCSharp.Model.Enum
     public enum FaceRenderProperties
     {
         None = 0,
-        Unknown = 1,
-        Unknown2 = 2,
-        Unknown3 = 4,
-        Unknown4 = 8,
-        IsQuad = 16
+        FlatShading = 1,
+        PhongShading = 2,
+        IsSprite = 4,
+        Unknown8 = 8,
+        IsQuad = 16,
+        IsDouble = 32,
     }
 }
