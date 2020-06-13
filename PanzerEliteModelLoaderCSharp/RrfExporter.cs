@@ -19,7 +19,7 @@ namespace PanzerEliteModelLoaderCSharp
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
-            var outputStr = ModelToString(model, true, true);
+            var outputStr = ModelToString(model, false, true);
 
             File.WriteAllText(exportPath, outputStr);
         }

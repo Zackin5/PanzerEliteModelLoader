@@ -74,10 +74,7 @@ namespace PanzerEliteModelLoaderCSharp
                         Console.WriteLine(
                             $"                 [{string.Join(", ", modelMesh.UnknownHeaders.Select(f => f.ToString("X")))}]");
                     }
-
-                    if (IsListOfListDiff(modelMesh.UnknownPattern))
-                        Console.WriteLine(@" /!\ PATTERNED LIST HAS A DELTA /!\");
-
+                    
                     Console.WriteLine();
                 }
 
@@ -94,21 +91,6 @@ namespace PanzerEliteModelLoaderCSharp
 
                 RrfExporter.Export(model, $"E:/GOG/Panzer Elite/files/modelHacks/odump/{fileName}.obj");
             }
-        }
-
-        // Returns true if any row in a 2D list is different from another
-        private static bool IsListOfListDiff(List<List<int>> listOfLists)
-        {
-            for (var i = 0; i < listOfLists.Count - 1; i++)
-            {
-                for (var j = 0; j < listOfLists[i].Count; j++)
-                {
-                    if (listOfLists[i][j] != listOfLists[i + 1][j])
-                        return true;
-                }
-            }
-
-            return false;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace PanzerEliteModelLoaderCSharp
             LoadMeshFaces(ref rrfModel, ref fileStream);
 
             // Read remaining unknown bytes
-            rrfModel.UnknownAddressRange.Start = fileStream.Position.ToString("x8");
+            rrfModel.UnknownAddressRange.Start = new Address(fileStream.Position);
 
             do
             {
@@ -72,7 +72,7 @@ namespace PanzerEliteModelLoaderCSharp
                 rrfModel.UnknownEnding.Add(BitConverter.ToInt32(intBuffer));
             } while (fileStream.Position < fileStream.Length);
 
-            rrfModel.UnknownAddressRange.End = fileStream.Position.ToString("x8");
+            rrfModel.UnknownAddressRange.End = new Address(fileStream.Position);
         }
 
         private static void LoadMeshHeaders(ref RrfModel rrfModel, ref FileStream fileStream)
@@ -83,7 +83,7 @@ namespace PanzerEliteModelLoaderCSharp
                 {
                     HeaderAddressRange = new AddressRange
                     {
-                        Start = fileStream.Position.ToString("x8")
+                        Start = new Address(fileStream.Position)
                     }
                 };
 
@@ -128,24 +128,19 @@ namespace PanzerEliteModelLoaderCSharp
                     mesh.UnknownHeaders.Add(fileStream.ReadInt32());
                 }
 
-                // Read pattern ints
-                const int numberOfIntsInPattern = 9;
-                const int patternCount = 72 / numberOfIntsInPattern;
-                for (var i = 0; i < patternCount; i++)
-                {
-                    var patternSet = new List<int>();
+                // Read address ints
+                mesh.UnknownPatternValues.Add(fileStream.ReadInt32()); // Unknown
 
-                    for (var j = 0; j < numberOfIntsInPattern; j++)
-                    {
-                        patternSet.Add(fileStream.ReadInt32());
-                    }
-
-                    mesh.UnknownPattern.Add(patternSet);
-                }
-
-                mesh.FaceCount = mesh.UnknownPattern[0][1];
-
-                mesh.HeaderAddressRange.End = fileStream.Position.ToString("x8");
+                mesh.FaceCount = fileStream.ReadInt32();
+                mesh.FaceAddressRange = new AddressRange(fileStream.ReadInt32(), fileStream.ReadInt32());
+                mesh.UnknownPatternValues.Add(fileStream.ReadInt32()); // Duplicate vertex count?
+                mesh.VertexAddressRange = new AddressRange(fileStream.ReadInt32(), fileStream.ReadInt32());
+                mesh.UnknownAddressRange = new AddressRange(fileStream.ReadInt32(), fileStream.ReadInt32());
+                
+                mesh.HeaderAddressRange.End = new Address(fileStream.Position);
+                
+                // Skip duplicate address patterns
+                fileStream.Seek(0xFC, SeekOrigin.Current);
                 
                 rrfModel.Meshes.Add(mesh);
             }
@@ -156,7 +151,7 @@ namespace PanzerEliteModelLoaderCSharp
             for (var i = 0; i < rrfModel.MeshCount; i++)
             {
                 // Retrieve face vertex information
-                rrfModel.Meshes[i].FaceAddressRange.Start = fileStream.GetPositionAddress();
+                fileStream.Seek(rrfModel.Meshes[i].FaceAddressRange.Start.Value, SeekOrigin.Begin);
 
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
                 {
@@ -166,7 +161,7 @@ namespace PanzerEliteModelLoaderCSharp
                     {
                         AddressRange = new AddressRange
                         {
-                            Start = fileStream.GetPositionAddress()
+                            Start = new Address(fileStream.Position)
                         },
                         VertexIndexes =
                         {
@@ -215,7 +210,7 @@ namespace PanzerEliteModelLoaderCSharp
                         fileStream.ReadByte()
                     };
 
-                    face.AddressRange.End = fileStream.GetPositionAddress();
+                    face.AddressRange.End = new Address(fileStream.Position);
 
                     rrfModel.Meshes[i].Faces.Add(face);
                 }
@@ -230,10 +225,8 @@ namespace PanzerEliteModelLoaderCSharp
                     }
                 }
 
-                rrfModel.Meshes[i].FaceAddressRange.End = fileStream.GetPositionAddress();
-
                 // Retrieve vertex information
-                rrfModel.Meshes[i].VertexAddressRange.Start = fileStream.GetPositionAddress();
+                fileStream.Seek(rrfModel.Meshes[i].VertexAddressRange.Start.Value, SeekOrigin.Begin);
 
                 for (var j = 0; j < rrfModel.Meshes[i].VertexCount; j++)
                 {
@@ -243,48 +236,6 @@ namespace PanzerEliteModelLoaderCSharp
                     rrfModel.Meshes[i].Vertices.Add(vertex);
 
                 }
-
-                rrfModel.Meshes[i].VertexAddressRange.End = fileStream.GetPositionAddress();
-                
-                // Abort if on last face
-                if (i >= rrfModel.MeshCount - 1) 
-                    continue;
-
-                // Brute force seek to the next face location
-                rrfModel.Meshes[i].FaceSkipAddressRange.Start = fileStream.GetPositionAddress();
-
-                var nextFaceStartPos = SeekNextFaces(rrfModel.Meshes[i + 1], ref fileStream);
-
-                if (nextFaceStartPos == -1)
-                {
-                    Console.WriteLine("Failed to find next face set");
-                    return;
-                }
-
-                rrfModel.Meshes[i].FaceSkipAddressRange.End = nextFaceStartPos.ToString("x8");
-
-                // Read unknown values before next faces as a 3xn grid
-                var gridIndex = 0;
-                var tempList = new List<int>();
-
-                while (fileStream.Position < nextFaceStartPos)
-                {
-                    var value = fileStream.ReadInt32();
-
-                    if (gridIndex > 2)
-                    {
-                        gridIndex = 1;
-                        rrfModel.Meshes[i].UnknownPostFace.Add(tempList);
-                        tempList = new List<int>{value};
-                    }
-                    else
-                    {
-                        tempList.Add(value);
-                        gridIndex++;
-                    }
-                }
-
-                rrfModel.Meshes[i].UnknownPostFaceCount = rrfModel.Meshes[i].UnknownPostFace.Count;
             }
         }
 
