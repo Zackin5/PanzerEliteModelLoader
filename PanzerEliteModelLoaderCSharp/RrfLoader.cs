@@ -162,25 +162,34 @@ namespace PanzerEliteModelLoaderCSharp
 
                     var face = new RrfFace
                     {
+                        AddressRange = new AddressRange
+                        {
+                            Start = fileStream.GetPositionAddress()
+                        },
                         VertexIndexes =
                         {
                             [0] = fileStream.ReadInt32(),
                             [1] = fileStream.ReadInt32(),
                             [2] = fileStream.ReadInt32(),
-                            [3] = -1
+                            [3] = -1    // Read later
+                        },
+                        UnknownPropertyBytes = new[]
+                        {
+                            fileStream.ReadByte(), 
+                            fileStream.ReadByte(), 
+                            fileStream.ReadByte(),
+                            fileStream.ReadByte(),
                         }
                     };
-
-                    face.Unknown.Add(fileStream.ReadInt32());
-
+                    
                     face.VertexIndexes[3] = fileStream.ReadInt32();
                     face.RenderProperties = fileStream.ReadInt32();
 
+                    face.AddressRange.End = fileStream.GetPositionAddress();
+
                     rrfModel.Meshes[i].Faces.Add(face);
                 }
-
-                rrfModel.Meshes[i].FaceAddressRange.End = fileStream.GetPositionAddress();
-
+                
                 // Retrieve unknown face ints
                 for (var j = 0; j < rrfModel.Meshes[i].FaceCount; j++)
                 {
@@ -190,6 +199,8 @@ namespace PanzerEliteModelLoaderCSharp
                         rrfModel.Meshes[i].Faces[j].Unknown2.Add(fileStream.ReadInt32());
                     }
                 }
+
+                rrfModel.Meshes[i].FaceAddressRange.End = fileStream.GetPositionAddress();
 
                 // Retrieve vertex information
                 rrfModel.Meshes[i].VertexAddressRange.Start = fileStream.GetPositionAddress();

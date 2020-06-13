@@ -18,7 +18,7 @@ namespace PanzerEliteModelLoaderCSharp
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
-            var outputStr = ModelToString(model, false, true);
+            var outputStr = ModelToString(model, true, true);
 
             File.WriteAllText(exportPath, outputStr);
         }
@@ -74,7 +74,7 @@ namespace PanzerEliteModelLoaderCSharp
 
                     sb.AppendLine("# QUAD v");
                     sb.AppendLine(
-                        $"f {face.VertexIndexes[0] + 1} {face.VertexIndexes[2] + 1} {face.VertexIndexes[3] + 1}");
+                        $"f {face.VertexIndexes[0] + vertexIndexOffset} {face.VertexIndexes[2] + vertexIndexOffset} {face.VertexIndexes[3] + vertexIndexOffset}");
                 }
 
                 sb.AppendLine($"# {mesh.FaceAddressRange.End}");
