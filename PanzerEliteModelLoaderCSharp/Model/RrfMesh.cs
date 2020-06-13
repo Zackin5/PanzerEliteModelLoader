@@ -27,11 +27,11 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public string Name;
         public int Type;
         
-        public List<int> UnknownTypeBytes; // UnknownPropertyBytes bytes starting at 0x65
+        public List<int> UnknownTypeBytes; // UnknownProperties bytes starting at 0x65
         public int VertexCount;
 
-        public List<int> UnknownHeaders;   // UnknownPropertyBytes mesh header integer values starting at 0x70
-        public List<List<int>> UnknownPattern; // UnknownPropertyBytes integer values with a repeating pattern
+        public List<int> UnknownHeaders;   // UnknownProperties mesh header integer values starting at 0x70
+        public List<List<int>> UnknownPattern; // UnknownProperties integer values with a repeating pattern
         public List<int> UnknownPostFace;
 
         public int FaceCount;   // Taken from UnknownPattern[0][1]

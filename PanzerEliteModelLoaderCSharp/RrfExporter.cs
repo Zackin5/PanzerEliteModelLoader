@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using PanzerEliteModelLoaderCSharp.Model;
+using PanzerEliteModelLoaderCSharp.Model.Enum;
 
 namespace PanzerEliteModelLoaderCSharp
 {
@@ -65,11 +66,7 @@ namespace PanzerEliteModelLoaderCSharp
                         $" {face.VertexIndexes[2] + vertexIndexOffset}");
 
                     // Triangulate quads
-                    if (!triangulateQuads ||
-                        face.VertexIndexes[3] == -1 ||
-                        face.VertexIndexes[3] == face.VertexIndexes[0] ||
-                        face.VertexIndexes[3] == face.VertexIndexes[1] ||
-                        face.VertexIndexes[3] == face.VertexIndexes[2])
+                    if((face.RenderProperties & FaceRenderProperties.IsQuad) != FaceRenderProperties.IsQuad)
                         continue;
 
                     sb.AppendLine("# QUAD v");

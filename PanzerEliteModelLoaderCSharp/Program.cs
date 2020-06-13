@@ -52,7 +52,7 @@ namespace PanzerEliteModelLoaderCSharp
                 var model = RrfLoader.LoadModel(modelPath);
 
                 Console.WriteLine($"{model.MeshCount} Meshes, {model.VertexTotal} Vertexes total");
-                Console.WriteLine($"UnknownPropertyBytes Int {model.UnknownInt}, UnknownPropertyBytes Int2 {model.UnknownInt2}, UnknownPropertyBytes Int3 {model.UnknownInt3}");
+                Console.WriteLine($"UnknownProperties Int {model.UnknownInt}, UnknownProperties Int2 {model.UnknownInt2}, UnknownProperties Int3 {model.UnknownInt3}");
                 Console.WriteLine($"            {model.UnknownInt:X},              {model.UnknownInt2:X},              {model.UnknownInt3:X}");
 
                 foreach (var modelMesh in model.Meshes)
@@ -61,14 +61,14 @@ namespace PanzerEliteModelLoaderCSharp
                     
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {
-                        Console.WriteLine($" UnknownPropertyBytes type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
+                        Console.WriteLine($" UnknownProperties type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
                         Console.WriteLine(
                             $"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
                     }
 
                     if (modelMesh.UnknownHeaders.Any(n => n != 0))
                     {
-                        Console.WriteLine($" UnknownPropertyBytes numbers [{string.Join(", ", modelMesh.UnknownHeaders)}]");
+                        Console.WriteLine($" UnknownProperties numbers [{string.Join(", ", modelMesh.UnknownHeaders)}]");
                         Console.WriteLine(
                             $"                 [{string.Join(", ", modelMesh.UnknownHeaders.Select(f => f.ToString("X")))}]");
                     }

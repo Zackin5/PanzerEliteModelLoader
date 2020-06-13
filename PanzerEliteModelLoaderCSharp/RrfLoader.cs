@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using PanzerEliteModelLoaderCSharp.Extensions;
 using PanzerEliteModelLoaderCSharp.Model;
+using PanzerEliteModelLoaderCSharp.Model.Enum;
 
 namespace PanzerEliteModelLoaderCSharp
 {
@@ -173,7 +174,7 @@ namespace PanzerEliteModelLoaderCSharp
                             [2] = fileStream.ReadInt32(),
                             [3] = -1    // Read later
                         },
-                        UnknownPropertyBytes = new[]
+                        UnknownProperties = new[]
                         {
                             fileStream.ReadByte(), 
                             fileStream.ReadByte(), 
@@ -183,7 +184,15 @@ namespace PanzerEliteModelLoaderCSharp
                     };
                     
                     face.VertexIndexes[3] = fileStream.ReadInt32();
-                    face.RenderProperties = fileStream.ReadInt32();
+
+                    face.RenderProperties = (FaceRenderProperties)fileStream.ReadByte();
+
+                    face.UnknownRenderProperties = new[]
+                    {
+                        fileStream.ReadByte(),
+                        fileStream.ReadByte(),
+                        fileStream.ReadByte()
+                    };
 
                     face.AddressRange.End = fileStream.GetPositionAddress();
 
