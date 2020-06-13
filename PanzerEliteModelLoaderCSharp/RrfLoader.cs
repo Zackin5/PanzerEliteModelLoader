@@ -154,14 +154,6 @@ namespace PanzerEliteModelLoaderCSharp
         {
             for (var i = 0; i < rrfModel.MeshCount; i++)
             {
-                if (i > 0)
-                {
-                    // Brute force seek to the next face location
-                    rrfModel.Meshes[i].FaceSkipAddressRange.Start = fileStream.GetPositionAddress();
-                    SeekNextFaces(rrfModel.Meshes[i], ref fileStream);
-                    rrfModel.Meshes[i].FaceSkipAddressRange.End = fileStream.GetPositionAddress();
-                }
-
                 // Retrieve face vertex information
                 rrfModel.Meshes[i].FaceAddressRange.Start = fileStream.GetPositionAddress();
 
@@ -212,14 +204,29 @@ namespace PanzerEliteModelLoaderCSharp
                 }
 
                 rrfModel.Meshes[i].VertexAddressRange.End = fileStream.GetPositionAddress();
+                
+                // Abort if on last face
+                if (i >= rrfModel.MeshCount - 1) 
+                    continue;
 
-                /*const int unknownIntX = 1;
-                const int unknownIntY = 54;
+                // Brute force seek to the next face location
+                rrfModel.Meshes[i].FaceSkipAddressRange.Start = fileStream.GetPositionAddress();
 
-                for (var k = 0; k < unknownIntX * unknownIntY; k++)
+                var nextFaceStartPos = SeekNextFaces(rrfModel.Meshes[i + 1], ref fileStream);
+
+                if (nextFaceStartPos == -1)
+                {
+                    Console.WriteLine("Failed to find next face set");
+                    return;
+                }
+
+                rrfModel.Meshes[i].FaceSkipAddressRange.End = nextFaceStartPos.ToString("x8");
+
+                // Read unknown values before next faces
+                while (fileStream.Position < nextFaceStartPos)
                 {
                     rrfModel.Meshes[i].UnknownPostFace.Add(fileStream.ReadInt32());
-                }*/
+                }
             }
         }
 
@@ -229,13 +236,13 @@ namespace PanzerEliteModelLoaderCSharp
         /// </summary>
         /// <param name="rrfMeshInfo"></param>
         /// <param name="fileStream"></param>
-        private static void SeekNextFaces(RrfMesh rrfMeshInfo, ref FileStream fileStream)
+        private static long SeekNextFaces(RrfMesh rrfMeshInfo, ref FileStream fileStream)
         {
-            var foundFaces = false;
+            var startingAddress = fileStream.Position;
             var maxVertexIndex = rrfMeshInfo.VertexCount;
 
             resetLoop:
-            while (!foundFaces && fileStream.Position < fileStream.Length)
+            while (fileStream.Position < fileStream.Length)
             {
                 var resetAddress = fileStream.Position;
                 
@@ -266,11 +273,15 @@ namespace PanzerEliteModelLoaderCSharp
                 }
 
                 // If we escaped the for loop then we pattern matched all faces
-                foundFaces = true;
 
-                // Reset the stream position to where we started so the faces are read by followup logic
-                fileStream.Position = resetAddress;
+                // Return the stream position to where we started
+                fileStream.Position = startingAddress;
+
+                // Return starting address for following faces
+                return resetAddress;
             }
+
+            return -1;
         }
     }
 }
