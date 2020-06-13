@@ -9,7 +9,6 @@ namespace PanzerEliteModelLoaderCSharp.Model
             Vertices = new List<int3>();
             UnknownHeaders = new List<int>();
             UnknownTypeBytes = new List<int>();
-            UnknownPatternValues = new List<int>();
             UnknownPostFace = new List<List<int>>();
             Faces = new List<RrfFace>();
             HeaderAddressRange = new AddressRange();
@@ -30,8 +29,9 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public List<int> UnknownTypeBytes; // UnknownProperties bytes starting at 0x65
         public int VertexCount;
 
-        public List<int> UnknownHeaders;   // UnknownProperties mesh header integer values starting at 0x70
-        public List<int> UnknownPatternValues; // UnknownProperties integer values with a repeating pattern
+        public List<int> UnknownHeaders;    // UnknownProperties mesh header integer values starting at 0x70
+        public int UnknownZeroValue;        // Typically always a 0??
+        public int DuplicateVertexValue;    // Duplicate vertex count??
         public List<List<int>> UnknownPostFace;
         public int UnknownPostFaceCount;    // Debug json output
 

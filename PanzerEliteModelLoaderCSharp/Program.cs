@@ -59,7 +59,6 @@ namespace PanzerEliteModelLoaderCSharp
                 foreach (var modelMesh in model.Meshes)
                 {
                     Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes, {3} Faces, {4} Unknown", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount, modelMesh.FaceCount, modelMesh.UnknownPostFaceCount);
-                    Console.WriteLine(" {0} Doubled faces, {1} non doubled", modelMesh.Faces.Count(f => f.IsDoubleSided), modelMesh.Faces.Count(f => !f.IsDoubleSided));
                     
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {
@@ -75,6 +74,9 @@ namespace PanzerEliteModelLoaderCSharp
                             $"                 [{string.Join(", ", modelMesh.UnknownHeaders.Select(f => f.ToString("X")))}]");
                     }
                     
+                    if(modelMesh.VertexCount != modelMesh.DuplicateVertexValue)
+                        Console.WriteLine(@" /!\ DUPLICATE VERTEX VALUE IS NOT DUPLICATE /!\");
+
                     Console.WriteLine();
                 }
 
