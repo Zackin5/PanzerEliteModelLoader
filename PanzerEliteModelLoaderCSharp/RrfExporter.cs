@@ -19,7 +19,7 @@ namespace PanzerEliteModelLoaderCSharp
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
-            var outputStr = ModelToString(model, false, true);
+            var outputStr = ModelToString(model, true, true);
 
             File.WriteAllText(exportPath, outputStr);
         }
@@ -36,45 +36,10 @@ namespace PanzerEliteModelLoaderCSharp
                 sb.AppendLine($"o {mesh.Name}");
                 sb.AppendLine($"# Header Range {mesh.HeaderAddressRange.Start} to {mesh.HeaderAddressRange.End}");
 
-                sb.AppendLine($"# {mesh.VertexCount} Vertexes");
-                sb.AppendLine($"# {mesh.VertexAddressRange.Start}");
-                foreach (var v in mesh.Vertices)
-                {
-                    var floatv = new float3(v);
+                OutputVertices(scaleMesh, sb, mesh);
 
-                    // Resize mesh
-                    if (scaleMesh)
-                    {
-                        floatv /= 1000;
-                        floatv /= 1000;
-                    }
+                OutputFaces(model, triangulateQuads, sb, mesh, index);
 
-                    sb.AppendLine($"v {floatv.X} {floatv.Z} {-floatv.Y}");
-                }
-
-                sb.AppendLine($"# {mesh.VertexAddressRange.End}");
-
-                sb.AppendLine($"# {mesh.FaceCount} Faces");
-                sb.AppendLine($"# {mesh.FaceAddressRange.Start}");
-                foreach (var face in mesh.Faces)
-                {
-                    var vertexIndexOffset = 1 + model.Meshes.Take(index).Sum(f => f.VertexCount);
-
-                    sb.AppendLine(
-                        $"f {face.VertexIndexes[0] + vertexIndexOffset}" +
-                        $" {face.VertexIndexes[1] + vertexIndexOffset}" +
-                        $" {face.VertexIndexes[2] + vertexIndexOffset}");
-
-                    // Triangulate quads
-                    if(!face.IsQuad && !triangulateQuads)
-                        continue;
-
-                    sb.AppendLine("# QUAD v");
-                    sb.AppendLine(
-                        $"f {face.VertexIndexes[0] + vertexIndexOffset} {face.VertexIndexes[2] + vertexIndexOffset} {face.VertexIndexes[3] + vertexIndexOffset}");
-                }
-
-                sb.AppendLine($"# {mesh.FaceAddressRange.End}");
                 sb.AppendLine($"# End of {mesh.Name}");
 
                 sb.AppendLine();
@@ -82,5 +47,52 @@ namespace PanzerEliteModelLoaderCSharp
 
             return sb.ToString();
         }
-	}
+
+        private static void OutputVertices(bool scaleMesh, StringBuilder sb, RrfMesh mesh)
+        {
+            sb.AppendLine($"# {mesh.VertexCount} Vertexes");
+            sb.AppendLine($"# {mesh.VertexAddressRange.Start}");
+            foreach (var v in mesh.Vertices)
+            {
+                var floatv = new float3(v);
+
+                // Resize mesh
+                if (scaleMesh)
+                {
+                    floatv /= 1000;
+                    floatv /= 1000;
+                }
+
+                sb.AppendLine($"v {floatv.X} {floatv.Z} {-floatv.Y}");
+            }
+
+            sb.AppendLine($"# {mesh.VertexAddressRange.End}");
+        }
+
+        private static void OutputFaces(RrfModel model, bool triangulateQuads, StringBuilder sb, RrfMesh mesh, int index)
+        {
+            sb.AppendLine($"# {mesh.FaceCount} Faces");
+            sb.AppendLine($"# {mesh.FaceAddressRange.Start}");
+            foreach (var face in mesh.Faces)
+            {
+                var vertexIndexOffset = 1 + model.Meshes.Take(index).Sum(f => f.VertexCount);
+
+                sb.AppendLine(
+                    $"f {face.VertexIndexes[0] + vertexIndexOffset}" +
+                    $" {face.VertexIndexes[1] + vertexIndexOffset}" +
+                    $" {face.VertexIndexes[2] + vertexIndexOffset}");
+
+                // Triangulate quads
+                if (!face.IsQuad || !triangulateQuads)
+                    continue;
+
+                sb.AppendLine("# QUAD v");
+                sb.AppendLine(
+                    $"f {face.VertexIndexes[0] + vertexIndexOffset} {face.VertexIndexes[2] + vertexIndexOffset} {face.VertexIndexes[3] + vertexIndexOffset}");
+            }
+
+            sb.AppendLine($"# {mesh.FaceAddressRange.End}");
+        }
+
+    }
 }
