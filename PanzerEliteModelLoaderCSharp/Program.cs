@@ -70,13 +70,6 @@ namespace PanzerEliteModelLoaderCSharp
                         Console.WriteLine(
                             $"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
                     }
-
-                    if (modelMesh.UnknownHeaders.Any(n => n != 0))
-                    {
-                        Console.WriteLine($" TextureProperties numbers [{string.Join(", ", modelMesh.UnknownHeaders)}]");
-                        Console.WriteLine(
-                            $"                 [{string.Join(", ", modelMesh.UnknownHeaders.Select(f => f.ToString("X")))}]");
-                    }
                     
                     if(modelMesh.VertexCount != modelMesh.DuplicateVertexValue)
                         Console.WriteLine(@" /!\ DUPLICATE VERTEX VALUE IS NOT DUPLICATE /!\");

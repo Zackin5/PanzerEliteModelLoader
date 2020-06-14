@@ -77,5 +77,15 @@
                 Z = a.Z * b.Z
             };
         }
+
+        public static float3 operator +(float3 a, float3 b)
+        {
+            return new float3
+            {
+                X = a.X + b.X,
+                Y = a.Y + b.Y,
+                Z = a.Z + b.Z
+            };
+        }
     }
 }

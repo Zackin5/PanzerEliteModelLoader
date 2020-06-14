@@ -7,10 +7,11 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public RrfMesh()
         {
             Vertices = new List<int3>();
-            UnknownHeaders = new List<int>();
+            UnknownPreTypeBytes = new List<int>();
             UnknownTypeBytes = new List<int>();
             UnknownPostFace = new List<List<int>>();
             Faces = new List<RrfFace>();
+            ChildMeshes = new List<int>();
             HeaderAddressRange = new AddressRange();
             VertexAddressRange = new AddressRange();
             FaceAddressRange = new AddressRange();
@@ -24,12 +25,16 @@ namespace PanzerEliteModelLoaderCSharp.Model
 
         // Ordered by appearance in file
         public string Name;
+        public int3 Origin;
+        public List<int> UnknownPreTypeBytes; // Unknown bytes starting at 0x44
         public int Type;
         
         public List<int> UnknownTypeBytes; // TextureProperties bytes starting at 0x65
         public int VertexCount;
 
-        public List<int> UnknownHeaders;    // TextureProperties mesh header integer values starting at 0x70
+        public int ChildCount;
+        public List<int> ChildMeshes;
+
         public int UnknownZeroValue;        // Typically always a 0??
         public int DuplicateVertexValue;    // Duplicate vertex count??
         public List<List<int>> UnknownPostFace;

@@ -10,5 +10,15 @@
         }
 
         public int X, Y, Z;
+
+        public static int3 operator +(int3 a, int3 b)
+        {
+            return new int3
+            {
+                X = a.X + b.X,
+                Y = a.Y + b.Y,
+                Z = a.Z + b.Z
+            };
+        }
     }
 }

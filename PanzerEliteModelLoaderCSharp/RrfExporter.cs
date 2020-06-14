@@ -32,11 +32,12 @@ namespace PanzerEliteModelLoaderCSharp
             for (var index = 0; index < model.Meshes.Count; index++)
             {
                 var mesh = model.Meshes[index];
+                var parent = model.Meshes.FirstOrDefault(f => f.ChildMeshes.Contains(index));
 
                 sb.AppendLine($"o {mesh.Name}");
                 sb.AppendLine($"# Header Range {mesh.HeaderAddressRange.Start} to {mesh.HeaderAddressRange.End}");
 
-                OutputVertices(scaleMesh, sb, mesh);
+                OutputVertices(scaleMesh, sb, mesh, GetParentOffset(index, model));
 
                 OutputFaces(model, triangulateQuads, sb, mesh, index);
 
@@ -48,22 +49,60 @@ namespace PanzerEliteModelLoaderCSharp
             return sb.ToString();
         }
 
-        private static void OutputVertices(bool scaleMesh, StringBuilder sb, RrfMesh mesh)
+        /// <summary>
+        /// Sum all the origin offsets in the parent/child tree of the model
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static int3 GetParentOffset(int index, RrfModel model)
+        {
+            var sumOffset = new int3();
+            var currentIndex = index;
+            bool foundParentAtIndex;
+
+            do
+            {
+                foundParentAtIndex = false;
+
+                for (var i = 0; i < model.Meshes.Count; i++)
+                {
+                    var mesh = model.Meshes[i];
+
+                    if (!mesh.ChildMeshes.Contains(currentIndex))
+                        continue;
+
+                    foundParentAtIndex = true;
+                    sumOffset += mesh.Origin;
+                    currentIndex = i;
+                    break;
+                }
+            } while (foundParentAtIndex);
+
+            return sumOffset;
+        }
+
+        private static void OutputVertices(bool scaleMesh, StringBuilder sb, RrfMesh mesh, int3 parentOffset)
         {
             sb.AppendLine($"# {mesh.VertexCount} Vertexes");
             sb.AppendLine($"# {mesh.VertexAddressRange.Start}");
             foreach (var v in mesh.Vertices)
             {
-                var floatv = new float3(v);
+                var offsetV = new float3(mesh.Origin + parentOffset);
+                var floatV = new float3(v);
 
                 // Resize mesh
                 if (scaleMesh)
                 {
-                    floatv /= 1000;
-                    floatv /= 1000;
+                    offsetV /= 1000;
+                    offsetV /= 1000;
+                    floatV /= 1000;
+                    floatV /= 1000;
                 }
 
-                sb.AppendLine($"v {floatv.X} {floatv.Z} {-floatv.Y}");
+                floatV += offsetV;
+
+                sb.AppendLine($"v {floatV.X} {floatV.Z} {-floatV.Y}");
             }
 
             sb.AppendLine($"# {mesh.VertexAddressRange.End}");

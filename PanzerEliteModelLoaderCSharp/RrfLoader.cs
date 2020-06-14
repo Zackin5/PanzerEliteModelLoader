@@ -101,11 +101,19 @@ namespace PanzerEliteModelLoaderCSharp
                     mesh.Name += (char) nByte;
                 }
 
-                // Skip mesh name field & unknown numbers starting at address 0x20
+                // Skip mesh name field
                 var nameOffset = maxNameLength - mesh.Name.Length - 1; // Minus one because we read a null byte
+                fileStream.Seek(nameOffset, SeekOrigin.Current);
+                var nameEnd = fileStream.Position;
 
+                mesh.Origin = new int3(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
+
+                // Read unknown values
                 const int unknownNumbersOffset = 0x44;
-                fileStream.Seek(nameOffset + unknownNumbersOffset, SeekOrigin.Current);
+                while (fileStream.Position < nameEnd + unknownNumbersOffset)
+                {
+                    mesh.UnknownPreTypeBytes.Add(fileStream.ReadInt32());
+                }
 
                 // Mesh type byte at 0x64
                 mesh.Type = fileStream.ReadByte();
@@ -121,12 +129,17 @@ namespace PanzerEliteModelLoaderCSharp
                 // Skip terminating(?) FF FF FF FF bytes
                 fileStream.Seek(0x4, SeekOrigin.Current);
 
-                // Read unknown ints
-                const int unknownIntCount = 33;
-                for (var i = 0; i < unknownIntCount; i++)
+                // Read child elements
+                mesh.ChildCount = fileStream.ReadInt32();
+
+                for (var i = 0; i < mesh.ChildCount && mesh.ChildCount > 0; i++)
                 {
-                    mesh.UnknownHeaders.Add(fileStream.ReadInt32());
+                    mesh.ChildMeshes.Add(fileStream.ReadInt32());
                 }
+
+                // Skip remaining child elements range
+                var unknownIntCount = (32 - mesh.ChildCount) * 4;   // 4x to skip by int size
+                fileStream.Seek(unknownIntCount, SeekOrigin.Current);
 
                 // Read address ints
                 mesh.UnknownZeroValue = fileStream.ReadInt32(); // Unknown
