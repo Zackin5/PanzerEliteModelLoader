@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -8,45 +7,14 @@ namespace PanzerEliteModelLoaderCSharp
 {
     class Program
     {
+        /// <summary>
+        /// Arg[0] is output dir, subsequent args are RRF models to convert
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
-            string[] modelPaths = {
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSF.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSP.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSPt.RRF",
-
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1GM.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1N.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TR.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TRR.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriP1TRR5.RRF",
-
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Shape.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeS2s.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeRot.RRF",
-
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2Snu.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2SnuAl.RRF",
-
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aabridgepiv.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\88Pak43_tex.RRF",
-                "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
-                "E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF",
-                "E:\\GOG\\Panzer Elite\\CustomA\\aaWall2N.RRF",
-                "E:\\GOG\\Panzer Elite\\CustomA\\tiger.RRF",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF",
-                "E:\\GOG\\Panzer Elite\\CustomA\\88Pak43.RRF",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF.OSTPAK REDUX",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSBridge.RRF",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignA.RRF.OSTPAK REDUX",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignB.RRF.OSTPAK REDUX",
-            };
+            var outputDir = args[0];
+            var modelPaths = args.Skip(1).ToArray();
 
             foreach (var modelPath in modelPaths)
             {
@@ -81,14 +49,18 @@ namespace PanzerEliteModelLoaderCSharp
 
                 var json = JsonConvert.SerializeObject(model, Formatting.Indented);
 
-                var dumpDir = "E:\\GOG\\Panzer Elite\\files\\modelHacks\\dump\\";
+                var jsonOutputDir = Path.Join(outputDir, "json");
+                var objOutputDir = Path.Join(outputDir, "obj");
 
-                if (!Directory.Exists(dumpDir))
-                    Directory.CreateDirectory(dumpDir);
+                if (!Directory.Exists(jsonOutputDir))
+                    Directory.CreateDirectory(jsonOutputDir);
 
-                File.WriteAllText( Path.Join(dumpDir, $"{fileName}.json"), json);
+                File.WriteAllText( Path.Join(jsonOutputDir, $"{fileName}.json"), json);
 
-                RrfExporter.Export(model, $"E:/GOG/Panzer Elite/files/modelHacks/odump/{fileName}.obj");
+                if (!Directory.Exists(objOutputDir))
+                    Directory.CreateDirectory(objOutputDir);
+
+                RrfExporter.Export(model, Path.Join(objOutputDir, $"{fileName}.obj"));
             }
         }
     }

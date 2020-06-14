@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PanzerEliteModelLoaderCSharp": {
+      "commandName": "Project",
+      "commandLineArgs": "\"E:/GOG/Panzer Elite/files/modelHacks/\" \"E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF\" \"E:\\GOG\\Panzer Elite\\files\\modelHacks\\aabridgepiv.RRF\" \"E:\\GOG\\Panzer Elite\\files\\modelHacks\\88Pak43_tex.RRF\" \"E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF\" \"E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF\" \"E:\\GOG\\Panzer Elite\\CustomA\\aaWall2N.RRF\" \"E:\\GOG\\Panzer Elite\\CustomA\\tiger.RRF\" \"E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF\" \"E:\\GOG\\Panzer Elite\\CustomA\\88Pak43.RRF\" \"E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF.OSTPAK REDUX\" \"E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSBridge.RRF\" \"E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignA.RRF.OSTPAK REDUX\" \"E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignB.RRF.OSTPAK REDUX\""
+    }
+  }
+}

@@ -1,9 +1,7 @@
-﻿
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
 using PanzerEliteModelLoaderCSharp.Model;
-using PanzerEliteModelLoaderCSharp.Model.Enum;
 
 namespace PanzerEliteModelLoaderCSharp
 {
