@@ -172,7 +172,7 @@ namespace PanzerEliteModelLoaderCSharp
                             [2] = fileStream.ReadInt32(),
                             [3] = -1    // Read later
                         },
-                        UnknownProperties = new[]
+                        TextureProperties = new[]
                         {
                             fileStream.ReadByte(), 
                             fileStream.ReadByte(), 

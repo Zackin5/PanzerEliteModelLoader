@@ -11,7 +11,6 @@ namespace PanzerEliteModelLoaderCSharp
         static void Main(string[] args)
         {
             string[] modelPaths = {
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriS.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Tri2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\TriSF.RRF",
@@ -31,13 +30,18 @@ namespace PanzerEliteModelLoaderCSharp
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2S.RRF",
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\CubeRot.RRF",
 
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2Snu.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\Cube2SnuAl.RRF",
+
                 "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aaAmmodump.RRF",
-                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\76netSplit.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\aabridgepiv.RRF",
+                "E:\\GOG\\Panzer Elite\\files\\modelHacks\\88Pak43_tex.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\76net.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aabox.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\aaWall2N.RRF",
                 "E:\\GOG\\Panzer Elite\\CustomA\\tiger.RRF",
-                "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF",
+                "E:\\GOG\\Panzer Elite\\Desert_Obj\\aabridge.RRF",
+                "E:\\GOG\\Panzer Elite\\CustomA\\88Pak43.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\88Pak43.RRF.OSTPAK REDUX",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSBridge.RRF",
                 "E:\\GOG\\Panzer Elite\\Desert_Obj\\aaSignA.RRF.OSTPAK REDUX",
@@ -53,7 +57,7 @@ namespace PanzerEliteModelLoaderCSharp
                 var model = RrfLoader.LoadModel(modelPath);
 
                 Console.WriteLine($"{model.MeshCount} Meshes, {model.VertexTotal} Vertexes total");
-                Console.WriteLine($"UnknownProperties Int {model.UnknownInt}, UnknownProperties Int2 {model.UnknownInt2}, UnknownProperties Int3 {model.UnknownInt3}");
+                Console.WriteLine($"TextureProperties Int {model.UnknownInt}, TextureProperties Int2 {model.UnknownInt2}, TextureProperties Int3 {model.UnknownInt3}");
                 Console.WriteLine($"            {model.UnknownInt:X},              {model.UnknownInt2:X},              {model.UnknownInt3:X}");
 
                 foreach (var modelMesh in model.Meshes)
@@ -62,14 +66,14 @@ namespace PanzerEliteModelLoaderCSharp
                     
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {
-                        Console.WriteLine($" UnknownProperties type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
+                        Console.WriteLine($" TextureProperties type bytes [{string.Join(", ", modelMesh.UnknownTypeBytes)}]");
                         Console.WriteLine(
                             $"                    [{string.Join(", ", modelMesh.UnknownTypeBytes.Select(f => f.ToString("X")))}]");
                     }
 
                     if (modelMesh.UnknownHeaders.Any(n => n != 0))
                     {
-                        Console.WriteLine($" UnknownProperties numbers [{string.Join(", ", modelMesh.UnknownHeaders)}]");
+                        Console.WriteLine($" TextureProperties numbers [{string.Join(", ", modelMesh.UnknownHeaders)}]");
                         Console.WriteLine(
                             $"                 [{string.Join(", ", modelMesh.UnknownHeaders.Select(f => f.ToString("X")))}]");
                     }

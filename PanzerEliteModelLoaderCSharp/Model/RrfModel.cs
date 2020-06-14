@@ -20,7 +20,7 @@ namespace PanzerEliteModelLoaderCSharp.Model
 
         public List<RrfMesh> Meshes;
 
-        public List<int> UnknownEnding; // UnknownProperties ints at ending
+        public List<int> UnknownEnding; // TextureProperties ints at ending
         public AddressRange UnknownAddressRange;
     }
 }

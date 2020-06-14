@@ -26,10 +26,10 @@ namespace PanzerEliteModelLoaderCSharp.Model
         public string Name;
         public int Type;
         
-        public List<int> UnknownTypeBytes; // UnknownProperties bytes starting at 0x65
+        public List<int> UnknownTypeBytes; // TextureProperties bytes starting at 0x65
         public int VertexCount;
 
-        public List<int> UnknownHeaders;    // UnknownProperties mesh header integer values starting at 0x70
+        public List<int> UnknownHeaders;    // TextureProperties mesh header integer values starting at 0x70
         public int UnknownZeroValue;        // Typically always a 0??
         public int DuplicateVertexValue;    // Duplicate vertex count??
         public List<List<int>> UnknownPostFace;
