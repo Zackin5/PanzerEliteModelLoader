@@ -41,7 +41,7 @@ namespace PanzerElite.TextureLoader
 
                     // Seek to and read textures
                     result.TextureDefines = new List<TlbTextureDefine>();
-                    fileStream.Position = 0x90C;
+                    fileStream.Position = 0x908;
 
                     for (var i = 0; i < result.TextureCount; i++)
                     {
@@ -59,7 +59,18 @@ namespace PanzerElite.TextureLoader
 
         private static TlbTextureDefine ReadTextureDefine(FileStream fileStream)
         {
-            var texture = new TlbTextureDefine();
+            var texture = new TlbTextureDefine
+            {
+                Index = fileStream.ReadByte()
+            };
+
+            var indexAnimByte = (byte)fileStream.ReadByte();    // First two bits store animation speed, second set store a second texture index
+
+            texture.AnimSpeed = (indexAnimByte & 0xF0) >> 4;
+            texture.RolloverIndex = indexAnimByte & 0x0F;
+
+            texture.AnimTexSize = fileStream.ReadByte();
+            texture.Unknown2 = fileStream.ReadByte();
 
             // Read texture name
             var nameStr = new byte[0x44];
@@ -68,17 +79,18 @@ namespace PanzerElite.TextureLoader
 
             // Read unknown numbers
             texture.UnknownNumbers = new List<int>();
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < 3; i++)
             {
                 texture.UnknownNumbers.Add(fileStream.ReadInt32());
             }
 
             // Read dimensions
+            texture.TextureCoord = new int2(fileStream.ReadInt32(), fileStream.ReadInt32());
             texture.TextureSize = new int2(fileStream.ReadInt32(), fileStream.ReadInt32());
 
             // Read second unknown number set
             texture.UnknownNumbers2 = new List<int>();
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < 3; i++)
             {
                 texture.UnknownNumbers2.Add(fileStream.ReadInt32());
             }

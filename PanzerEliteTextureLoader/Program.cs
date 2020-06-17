@@ -24,7 +24,7 @@ namespace PanzerElite.TextureLoader
 
                 var texture = TlbLoader.LoadTextureFile(filePath);
 
-                Console.WriteLine("Max #{0} , Total #{1}", texture.MaxTextureId, texture.TextureCount);
+                Console.WriteLine("Max #{0}, Total #{1}", texture.MaxTextureId, texture.TextureCount);
 
                 Console.WriteLine();
 
