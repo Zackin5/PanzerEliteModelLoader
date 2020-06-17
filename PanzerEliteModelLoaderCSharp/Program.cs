@@ -30,7 +30,7 @@ namespace PanzerElite.ModelLoader
 
                 foreach (var modelMesh in model.Meshes)
                 {
-                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes, {3} Faces, {4} Unknown", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount, modelMesh.FaceCount, modelMesh.UnknownPostFaceCount);
+                    Console.WriteLine(" \"{0}\", Type ID {1}, {2} Vertexes, {3} Faces, {4} RolloverIndex", modelMesh.Name, modelMesh.Type, modelMesh.VertexCount, modelMesh.FaceCount, modelMesh.UnknownPostFaceCount);
                     
                     if (modelMesh.UnknownTypeBytes.Any(n => n != 0))
                     {

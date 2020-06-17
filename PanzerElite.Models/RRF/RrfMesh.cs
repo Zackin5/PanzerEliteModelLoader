@@ -22,12 +22,12 @@ namespace PanzerElite.Classes.RRF
         public AddressRange HeaderAddressRange;     // Address range for header information
         public AddressRange VertexAddressRange;     // Address range for vertex information
         public AddressRange FaceAddressRange;       // Address range for face information
-        public AddressRange UnknownAddressRange;    // Unknown data after face range
+        public AddressRange UnknownAddressRange;    // RolloverIndex data after face range
 
         // Ordered by appearance in file
         public string Name;
         public int3 Origin;
-        public List<int> UnknownPreTypeBytes; // Unknown bytes starting at 0x44
+        public List<int> UnknownPreTypeBytes; // RolloverIndex bytes starting at 0x44
         public int Type;
         
         public List<int> UnknownTypeBytes; // TextureProperties bytes starting at 0x65

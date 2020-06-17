@@ -14,12 +14,14 @@ namespace PanzerElite.Classes.RRF
         public AddressRange AddressRange;
 
         public int[] VertexIndexes;     // Note: Vertex ordering determines texture rotation
-        public int[] TextureProperties; // Unknown texture assignment properties
+        public int TextureIndex;    // Index of the texture to use from a TLB file
+        public int TextureRolloverIndex;    // Index of the texture to use from a TLB file
+        public int[] TextureProperties; // RolloverIndex texture assignment properties
 
         public bool IsQuad;         // 4th vertex is used to create a quad polygon
         public bool IsDoubleSided;  // Is a double-sided face
         public bool IsSprite;       // Face is a sprite/transparent?
-        public bool IsUnknown8;     // Unknown property value 8
+        public bool IsUnknown8;     // RolloverIndex property value 8
         public FaceShading Shading; // Shading properties
 
         public int[] UnknownRenderProperties;

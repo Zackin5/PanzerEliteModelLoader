@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "PanzerElite.TextureLoader": {
-      "commandName": "Project",
-      "commandLineArgs": "\"E:\\GOG\\Panzer Elite\\files\\modelHacks\\tex\" \"E:\\GOG\\Panzer Elite\\Texture\\CustomA1.TLB\" \"E:\\GOG\\Panzer Elite\\Texture\\CustomA2.TLB\" \"E:\\GOG\\Panzer Elite\\Texture\\CustomB4.TLB\""
-    }
-  }
-}

@@ -143,7 +143,7 @@ namespace PanzerElite.ModelLoader
                 fileStream.Seek(unknownIntCount, SeekOrigin.Current);
 
                 // Read address ints
-                mesh.UnknownZeroValue = fileStream.ReadInt32(); // Unknown
+                mesh.UnknownZeroValue = fileStream.ReadInt32(); // RolloverIndex
 
                 mesh.FaceCount = fileStream.ReadInt32();
                 mesh.FaceAddressRange = new AddressRange(fileStream.ReadInt32(), fileStream.ReadInt32());
@@ -186,10 +186,10 @@ namespace PanzerElite.ModelLoader
                             [2] = fileStream.ReadInt32(),
                             [3] = -1    // Read later
                         },
+                        TextureIndex = fileStream.ReadByte(),
+                        TextureRolloverIndex = fileStream.ReadByte(),
                         TextureProperties = new[]
                         {
-                            fileStream.ReadByte(), 
-                            fileStream.ReadByte(), 
                             fileStream.ReadByte(),
                             fileStream.ReadByte(),
                         }
