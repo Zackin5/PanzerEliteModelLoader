@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using PanzerEliteModelLoaderCSharp.Model;
+using PanzerElite.Classes.RRF;
+using PanzerElite.Classes.Types;
 
-namespace PanzerEliteModelLoaderCSharp
+namespace PanzerElite.ModelLoader
 {
     /// <summary>
     /// Exports a RRF model to OBJ

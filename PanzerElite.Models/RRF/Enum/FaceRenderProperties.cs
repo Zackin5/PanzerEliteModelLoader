@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PanzerEliteModelLoaderCSharp.Model.Enum
+namespace PanzerElite.Classes.RRF.Enum
 {
     [Flags]
     public enum FaceRenderProperties

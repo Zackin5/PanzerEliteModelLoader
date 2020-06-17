@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace PanzerEliteModelLoaderCSharp
+namespace PanzerElite.ModelLoader
 {
     class Program
     {

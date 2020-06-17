@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PanzerEliteModelLoaderCSharp.Model
+namespace PanzerElite.Classes.RRF
 {
     public class RrfModel
     {

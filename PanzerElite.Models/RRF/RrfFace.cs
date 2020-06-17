@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PanzerEliteModelLoaderCSharp.Model.Enum;
+using PanzerElite.Classes.RRF.Enum;
 
-namespace PanzerEliteModelLoaderCSharp.Model
+namespace PanzerElite.Classes.RRF
 {
     public class RrfFace
     {

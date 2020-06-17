@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using PanzerElite.Classes.Types;
 
-namespace PanzerEliteModelLoaderCSharp.Model
+namespace PanzerElite.Classes.RRF
 {
     public class RrfMesh
     {

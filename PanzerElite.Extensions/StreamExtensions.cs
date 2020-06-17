@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PanzerEliteModelLoaderCSharp.Extensions
+namespace PanzerElite.Extensions
 {
     public static class StreamExtensions
     {

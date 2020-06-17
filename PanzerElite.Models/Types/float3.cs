@@ -1,4 +1,4 @@
-﻿namespace PanzerEliteModelLoaderCSharp.Model
+﻿namespace PanzerElite.Classes.Types
 {
     public struct float3
     {

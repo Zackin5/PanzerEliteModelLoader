@@ -1,4 +1,4 @@
-﻿namespace PanzerEliteModelLoaderCSharp.Model.Enum
+﻿namespace PanzerElite.Classes.RRF.Enum
 {
     public enum FaceShading
     {

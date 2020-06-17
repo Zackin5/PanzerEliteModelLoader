@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PanzerEliteModelLoaderCSharp.Extensions;
-using PanzerEliteModelLoaderCSharp.Model;
-using PanzerEliteModelLoaderCSharp.Model.Enum;
+using PanzerElite.Classes.RRF;
+using PanzerElite.Classes.RRF.Enum;
+using PanzerElite.Classes.Types;
+using PanzerElite.Extensions;
 
-namespace PanzerEliteModelLoaderCSharp
+namespace PanzerElite.ModelLoader
 {
     public class RrfLoader
     {

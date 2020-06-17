@@ -1,4 +1,4 @@
-﻿namespace PanzerEliteModelLoaderCSharp.Model
+﻿namespace PanzerElite.Classes.RRF
 {
     public struct AddressRange
     {
