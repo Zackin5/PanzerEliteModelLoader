@@ -27,6 +27,8 @@ namespace PanzerElite.Classes.RRF
         // Ordered by appearance in file
         public string Name;
         public int3 Origin;
+        public int3 BoundingBox;
+        public int3 BoundingBoxOffset;
         public List<int> UnknownPreTypeBytes; // RolloverIndex bytes starting at 0x44
         public int Type;
         

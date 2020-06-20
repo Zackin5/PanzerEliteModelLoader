@@ -109,6 +109,14 @@ namespace PanzerElite.ModelLoader
 
                 mesh.Origin = new int3(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
 
+                // Read bounds
+                mesh.BoundingBox = new int3(fileStream.ReadInt32());
+                mesh.BoundingBoxOffset = new int3(fileStream.ReadInt32());
+                mesh.BoundingBox.Y = fileStream.ReadInt32();
+                mesh.BoundingBoxOffset.Y = fileStream.ReadInt32();
+                mesh.BoundingBox.Z = fileStream.ReadInt32();
+                mesh.BoundingBoxOffset.Z = fileStream.ReadInt32();
+
                 // Read unknown values
                 const int unknownNumbersOffset = 0x44;
                 while (fileStream.Position < nameEnd + unknownNumbersOffset)
