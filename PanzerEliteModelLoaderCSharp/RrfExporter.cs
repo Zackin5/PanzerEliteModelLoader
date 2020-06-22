@@ -88,7 +88,7 @@ namespace PanzerElite.ModelLoader
             foreach (var v in mesh.Vertices)
             {
                 var offsetV = new float3(mesh.Origin + parentOffset);
-                var floatV = new float3(v);
+                var floatV = new float3(v.Coord);
 
                 // Resize mesh
                 if (scaleMesh)

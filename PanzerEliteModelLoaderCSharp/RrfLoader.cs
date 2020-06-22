@@ -254,10 +254,9 @@ namespace PanzerElite.ModelLoader
 
                 for (var j = 0; j < rrfModel.Meshes[i].VertexCount; j++)
                 {
-
                     var vertex = new int3(fileStream.ReadInt32(), fileStream.ReadInt32(), fileStream.ReadInt32());
 
-                    rrfModel.Meshes[i].Vertices.Add(vertex);
+                    rrfModel.Meshes[i].Vertices.Add(new RrfVertex(vertex));
 
                 }
                 
@@ -268,7 +267,7 @@ namespace PanzerElite.ModelLoader
                 var gridIndex = 0;
                 var tempList = new List<int>();
 
-                while (fileStream.Position < rrfModel.Meshes[i].UnknownAddressRange.End)
+                while (fileStream.Position < rrfModel.Meshes[i].UnknownAddressRange.End - rrfModel.Meshes[i].VertexCount + 6)
                 {
                     var value = fileStream.ReadInt32();
 
@@ -286,6 +285,17 @@ namespace PanzerElite.ModelLoader
                 }
 
                 rrfModel.Meshes[i].UnknownPostFaceCount = rrfModel.Meshes[i].UnknownPostFace.Count;
+
+                // Load vertex attributes
+                for (var k = 0; k < rrfModel.Meshes[i].VertexCount; k++)
+                {
+                    rrfModel.Meshes[i].Vertices[k].AttributeId = fileStream.ReadByte();
+
+                    var posLevel = fileStream.ReadByte();   // First bit stores position(?), second stores level(?)
+
+                    rrfModel.Meshes[i].Vertices[k].Position = (posLevel & 0xF0) >> 4;
+                    rrfModel.Meshes[i].Vertices[k].Level = posLevel & 0x0F;
+                }
             }
         }
 

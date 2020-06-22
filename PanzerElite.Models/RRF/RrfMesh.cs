@@ -7,7 +7,7 @@ namespace PanzerElite.Classes.RRF
     {
         public RrfMesh()
         {
-            Vertices = new List<int3>();
+            Vertices = new List<RrfVertex>();
             UnknownPreTypeBytes = new List<int>();
             UnknownTypeBytes = new List<int>();
             UnknownPostFace = new List<List<int>>();
@@ -46,6 +46,6 @@ namespace PanzerElite.Classes.RRF
         public int FaceCount;   // Taken from UnknownPatternValues[0][1]
 
         public List<RrfFace> Faces;
-        public List<int3> Vertices;
+        public List<RrfVertex> Vertices;
     }
 }
