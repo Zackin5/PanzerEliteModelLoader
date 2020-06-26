@@ -18,13 +18,13 @@ namespace PanzerElite.ModelLoader
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
-            var outputStr = ModelToString(model, true, true);
+            var outputStr = ModelToString(model, true);
 
             File.WriteAllText(exportPath, outputStr);
         }
 
         // Code lifted from https://wiki.unity3d.com/index.php/ExportOBJ
-        public static string ModelToString(RrfModel model, bool triangulateQuads = true, bool scaleMesh = true)
+        public static string ModelToString(RrfModel model, bool scaleMesh = true)
         {
             var sb = new StringBuilder();
 
@@ -38,7 +38,7 @@ namespace PanzerElite.ModelLoader
 
                 OutputVertices(scaleMesh, sb, mesh, GetParentOffset(index, model));
 
-                OutputFaces(model, triangulateQuads, sb, mesh, index);
+                OutputFaces(model, sb, mesh, index);
 
                 sb.AppendLine($"# End of {mesh.Name}");
 
@@ -107,7 +107,7 @@ namespace PanzerElite.ModelLoader
             sb.AppendLine($"# {mesh.VertexAddressRange.End}");
         }
 
-        private static void OutputFaces(RrfModel model, bool triangulateQuads, StringBuilder sb, RrfMesh mesh, int index)
+        private static void OutputFaces(RrfModel model, StringBuilder sb, RrfMesh mesh, int index)
         {
             sb.AppendLine($"# {mesh.FaceCount} Faces");
             sb.AppendLine($"# {mesh.FaceAddressRange.Start}");
@@ -118,15 +118,8 @@ namespace PanzerElite.ModelLoader
                 sb.AppendLine(
                     $"f {face.VertexIndexes[0] + vertexIndexOffset}" +
                     $" {face.VertexIndexes[1] + vertexIndexOffset}" +
-                    $" {face.VertexIndexes[2] + vertexIndexOffset}");
-
-                // Triangulate quads
-                if (!face.IsQuad || !triangulateQuads)
-                    continue;
-
-                sb.AppendLine("# QUAD v");
-                sb.AppendLine(
-                    $"f {face.VertexIndexes[0] + vertexIndexOffset} {face.VertexIndexes[2] + vertexIndexOffset} {face.VertexIndexes[3] + vertexIndexOffset}");
+                    $" {face.VertexIndexes[2] + vertexIndexOffset}" +
+                    (face.IsQuad ? $" {face.VertexIndexes[3] + vertexIndexOffset}" : string.Empty));
             }
 
             sb.AppendLine($"# {mesh.FaceAddressRange.End}");
