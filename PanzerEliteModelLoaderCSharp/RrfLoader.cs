@@ -269,9 +269,9 @@ namespace PanzerElite.ModelLoader
 
                 while (fileStream.Position < rrfModel.Meshes[i].UnknownAddressRange.End)
                 {
-                    var value = fileStream.ReadInt32();
+                    var value = fileStream.ReadByte();
 
-                    if (gridIndex > 2)
+                    if (gridIndex > 5)
                     {
                         gridIndex = 1;
                         rrfModel.Meshes[i].UnknownPostFace.Add(tempList);
