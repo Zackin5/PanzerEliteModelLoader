@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
-using Assets.Scripts.Lib.Model.Enum;
 using PanzerElite.Classes.RRF;
+using PanzerElite.Classes.RRF.Enum;
 using PanzerElite.Classes.Types;
 
 namespace PanzerElite.ModelLoader

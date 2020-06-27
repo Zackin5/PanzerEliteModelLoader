@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Lib.Model.Enum
+﻿namespace PanzerElite.Classes.RRF.Enum
 {
     public enum RrfAttribute
     {

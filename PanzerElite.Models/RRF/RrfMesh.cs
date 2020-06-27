@@ -14,15 +14,14 @@ namespace PanzerElite.Classes.RRF
             Faces = new List<RrfFace>();
             ChildMeshes = new List<int>();
             HeaderAddressRange = new AddressRange();
-            VertexAddressRange = new AddressRange();
-            FaceAddressRange = new AddressRange();
-            UnknownAddressRange = new AddressRange();
+            VertexAttrAddressRange = new AddressRange();
         }
 
         public AddressRange HeaderAddressRange;     // Address range for header information
-        public AddressRange VertexAddressRange;     // Address range for vertex information
-        public AddressRange FaceAddressRange;       // Address range for face information
-        public AddressRange UnknownAddressRange;    // RolloverIndex data after face range
+        public AddressRange VertexAddressRange;     // Address range in header for vertex information
+        public AddressRange FaceAddressRange;       // Address range in header for face information
+        public AddressRange UnknownAddressRange;    // Address range in header for unknown data after face information
+        public AddressRange VertexAttrAddressRange; // Vertex attributes data range
 
         // Ordered by appearance in file
         public string Name;
