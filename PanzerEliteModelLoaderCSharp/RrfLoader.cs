@@ -267,7 +267,7 @@ namespace PanzerElite.ModelLoader
                 var gridIndex = 0;
                 var tempList = new List<int>();
 
-                while (fileStream.Position < rrfModel.Meshes[i].UnknownAddressRange.End - rrfModel.Meshes[i].VertexCount + 6)
+                while (fileStream.Position < rrfModel.Meshes[i].UnknownAddressRange.End)
                 {
                     var value = fileStream.ReadInt32();
 
