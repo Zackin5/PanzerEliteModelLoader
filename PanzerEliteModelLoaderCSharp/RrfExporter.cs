@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
+using Assets.Scripts.Lib.Model.Enum;
 using PanzerElite.Classes.RRF;
 using PanzerElite.Classes.Types;
 
@@ -100,6 +103,12 @@ namespace PanzerElite.ModelLoader
                 }
 
                 floatV += offsetV;
+
+                if (v.AttributeId != 0)
+                {
+                    var attrName = Enum.GetName(typeof(RrfAttribute), v.AttributeId);
+                    sb.AppendLine($"# Attribute {v.AttributeId} {attrName}");
+                }
 
                 sb.AppendLine($"v {floatV.X} {floatV.Z} {-floatV.Y}");
             }

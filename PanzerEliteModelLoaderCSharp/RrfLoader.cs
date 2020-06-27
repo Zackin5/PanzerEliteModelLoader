@@ -286,6 +286,8 @@ namespace PanzerElite.ModelLoader
 
                 rrfModel.Meshes[i].UnknownPostFaceCount = rrfModel.Meshes[i].UnknownPostFace.Count;
 
+                rrfModel.Meshes[i].VertexAttrAddressRange.Start = fileStream.Position;
+
                 // Load vertex attributes
                 for (var k = 0; k < rrfModel.Meshes[i].VertexCount; k++)
                 {
@@ -296,61 +298,9 @@ namespace PanzerElite.ModelLoader
                     rrfModel.Meshes[i].Vertices[k].Position = (posLevel & 0xF0) >> 4;
                     rrfModel.Meshes[i].Vertices[k].Level = posLevel & 0x0F;
                 }
+
+                rrfModel.Meshes[i].VertexAttrAddressRange.End = fileStream.Position;
             }
-        }
-
-        /// <summary>
-        /// This method attempts to brute seek the next set of face indexes to load,
-        /// since I haven't figured out the pattern of the bytes separating them yet
-        /// </summary>
-        /// <param name="rrfMeshInfo"></param>
-        /// <param name="fileStream"></param>
-        private static long SeekNextFaces(RrfMesh rrfMeshInfo, ref FileStream fileStream)
-        {
-            var startingAddress = fileStream.Position;
-            var maxVertexIndex = rrfMeshInfo.VertexCount;
-
-            resetLoop:
-            while (fileStream.Position < fileStream.Length)
-            {
-                var resetAddress = fileStream.Position;
-                
-                for (var i = 0; i < rrfMeshInfo.FaceCount; i++)
-                {
-                    var readVertices = new[] {-1, -1, -1, -1, -1};
-
-                    // Test vertex indexes 1,2,3 and 4
-                    for (var j = 0; j < 5; j++)
-                    {
-                        var vertexIndex = fileStream.ReadInt32();
-
-                        if (vertexIndex < maxVertexIndex
-                            && vertexIndex >= 0
-                            && !readVertices.Contains(vertexIndex)
-                            || j == 3) // Skip testing unknown var at j == 3
-                        {
-                            readVertices[j] = vertexIndex;
-                            continue;
-                        }
-
-                        fileStream.Position = resetAddress + 4;
-                        goto resetLoop;
-                    }
-
-                    // Render properties
-                    fileStream.ReadInt32();
-                }
-
-                // If we escaped the for loop then we pattern matched all faces
-
-                // Return the stream position to where we started
-                fileStream.Position = startingAddress;
-
-                // Return starting address for following faces
-                return resetAddress;
-            }
-
-            return -1;
         }
     }
 }
