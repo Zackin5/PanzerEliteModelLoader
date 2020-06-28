@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PanzerElite.ScapeLoader": {
+      "commandName": "Project",
+      "commandLineArgs": "\"E:\\GOG\\Panzer Elite\\files\\sciHacks\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\ginst2.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\agrigento.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\berlin.dat\""
+    }
+  }
+}
