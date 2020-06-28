@@ -2,7 +2,7 @@
   "profiles": {
     "PanzerElite.ScapeLoader": {
       "commandName": "Project",
-      "commandLineArgs": "\"E:\\GOG\\Panzer Elite\\files\\sciHacks\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\ginst2.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\agrigento.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\berlin.dat\""
+      "commandLineArgs": "\"E:\\GOG\\Panzer Elite\\files\\sciHacks\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\ginst2.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\agrigento.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\berlin.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\11th_div_breakout.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\atcoast.dat\" \"E:\\GOG\\Panzer Elite\\Scenario\\Scapes\\berezov.dat\""
     }
   }
 }

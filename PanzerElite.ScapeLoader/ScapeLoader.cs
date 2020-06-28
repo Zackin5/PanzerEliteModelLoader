@@ -36,8 +36,8 @@ namespace PanzerElite.ScapeLoader
         {
             var u1 = fileStream.ReadInt32();
             var u2 = fileStream.ReadInt32();
-            var w = fileStream.ReadInt32();
             var h = fileStream.ReadInt32();
+            var w = fileStream.ReadInt32();
 
             var scape = new Scape(u1, u2, w, h);
 
