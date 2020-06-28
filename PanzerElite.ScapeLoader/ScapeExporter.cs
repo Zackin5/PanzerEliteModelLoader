@@ -14,11 +14,11 @@ namespace PanzerElite.ScapeLoader
             {
                 for (var y = 0; y < scapeData.Height; y++)
                 {
-                    var height = Math.Clamp(scapeData.HeightMap[0, x, y], 0, 255);
-                    var height2 = Math.Clamp(scapeData.HeightMap[1, x, y], 0, 255);
-                    var height3 = Math.Clamp(scapeData.HeightMap[2, x, y], 0, 255);
-                    var height4 = Math.Clamp(scapeData.HeightMap[3, x, y], 0, 255);
-                    outImg.SetPixel(x, y, Color.FromArgb(height4, height, height2, height3));
+                    var height = Math.Clamp(scapeData.HeightMap[x, y], 0, 255);
+                    var texture = Math.Clamp(scapeData.TextureMap[x, y], 0, 255);
+                    var u1 = Math.Clamp(scapeData.UnknownMap[0, x, y], 0, 255);
+                    var u2 = Math.Clamp(scapeData.UnknownMap[1, x, y], 0, 255);
+                    outImg.SetPixel(x, y, Color.FromArgb(u2, texture, u1, height));
                 }
             }
 
