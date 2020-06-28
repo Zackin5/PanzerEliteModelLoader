@@ -12,7 +12,7 @@
 
             HeightMap = new int[width,height];
             TextureMap = new int[width,height];
-            UnknownMap = new int[2,width,height];
+            UnknownMap = new int[width,height];
         }
 
         public int Unknown1;
@@ -23,7 +23,7 @@
 
         public int[,] HeightMap;
         public int[,] TextureMap;
-        public int[,,] UnknownMap;
+        public int[,] UnknownMap;
 
         public long HeightMapEndAddress;
     }
