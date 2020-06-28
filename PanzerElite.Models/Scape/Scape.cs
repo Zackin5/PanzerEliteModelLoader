@@ -10,7 +10,7 @@
             Width = width;
             Height = height;
 
-            HeightMap = new int[width,height];
+            HeightMap = new int[4,width,height];
         }
 
         public int Unknown1;
@@ -19,6 +19,8 @@
         public int Width;
         public int Height;
 
-        public int[,] HeightMap;
+        public int[,,] HeightMap;
+
+        public long HeightMapEndAddress;
     }
 }

@@ -45,9 +45,14 @@ namespace PanzerElite.ScapeLoader
             {
                 for (var y = 0; y < scape.Height; y++)
                 {
-                    scape.HeightMap[x, y] = fileStream.ReadInt16();
+                    scape.HeightMap[0, x, y] = fileStream.ReadByte();
+                    scape.HeightMap[1, x, y] = fileStream.ReadByte();
+                    scape.HeightMap[2, x, y] = fileStream.ReadByte();
+                    scape.HeightMap[3, x, y] = fileStream.ReadByte();
                 }
             }
+
+            scape.HeightMapEndAddress = fileStream.Position;
 
             return scape;
         }
