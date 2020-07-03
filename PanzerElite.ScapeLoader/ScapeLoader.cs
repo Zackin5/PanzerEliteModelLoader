@@ -1,5 +1,6 @@
 ﻿using PanzerElite.Classes.Scape;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using PanzerElite.Extensions;
 
@@ -14,7 +15,7 @@ namespace PanzerElite.ScapeLoader
             if (!File.Exists(filepath))
                 throw new FileNotFoundException();
 
-            using (var fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+            using (var fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 try
                 {
@@ -41,6 +42,7 @@ namespace PanzerElite.ScapeLoader
 
             var scape = new Scape(u1, u2, w, h);
 
+            // Load maps
             for (var x = 0; x < scape.Width; x++)
             {
                 for (var y = 0; y < scape.Height; y++)
@@ -52,6 +54,30 @@ namespace PanzerElite.ScapeLoader
             }
 
             scape.HeightMapEndAddress = fileStream.Position;
+
+            // Load unknown coords;
+            scape.UnknownCoordsRange.Start = fileStream.Position;
+            var coordArray = new List<int[,]>();
+
+            for (var x = 0; x < scape.Width * 30; x++)
+            {
+                var coords = new[,]
+                {
+                    {
+                        fileStream.ReadInt32()
+
+                    },
+                    {
+                        fileStream.ReadInt32()
+
+                    }
+                };
+
+                coordArray.Add(coords);
+            }
+
+            scape.UnknownCoords = coordArray.ToArray();
+            scape.UnknownCoordsRange.End = fileStream.Position;
 
             return scape;
         }

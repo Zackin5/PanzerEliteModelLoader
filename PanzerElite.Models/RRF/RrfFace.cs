@@ -15,7 +15,8 @@ namespace PanzerElite.Classes.RRF
 
         public int[] VertexIndexes;     // Note: Vertex ordering determines texture rotation
         public int TextureIndex;    // Index of the texture to use from a TLB file
-        public int TextureRolloverIndex;    // Index of the texture to use from a TLB file
+        public int TextureFileIndex;    // Index of the texture TLB file to use for the scenario type
+        public int TextureRolloverIndex;    // Rollover index for TLB file texture mapping
         public int[] TextureProperties; // RolloverIndex texture assignment properties
 
         public bool IsQuad;         // 4th vertex is used to create a quad polygon

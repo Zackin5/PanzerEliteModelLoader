@@ -195,14 +195,18 @@ namespace PanzerElite.ModelLoader
                             [3] = -1    // Read later
                         },
                         TextureIndex = fileStream.ReadByte(),
-                        TextureRolloverIndex = fileStream.ReadByte(),
-                        TextureProperties = new[]
-                        {
-                            fileStream.ReadByte(),
-                            fileStream.ReadByte(),
-                        }
                     };
-                    
+
+                    var textureBits = fileStream.Read4BitByte();
+
+                    face.TextureFileIndex = textureBits.Item1;
+                    face.TextureRolloverIndex = textureBits.Item2;
+                    face.TextureProperties = new[]
+                    {
+                        fileStream.ReadByte(),
+                        fileStream.ReadByte(),
+                    };
+
                     face.VertexIndexes[3] = fileStream.ReadInt32(); // 4th vertex index is part of a properties set
 
                     // Get render properties
@@ -293,10 +297,10 @@ namespace PanzerElite.ModelLoader
                 {
                     rrfModel.Meshes[i].Vertices[k].AttributeId = fileStream.ReadByte();
 
-                    var posLevel = fileStream.ReadByte();   // First bit stores position(?), second stores level(?)
+                    var posLevel = fileStream.Read4BitByte();   // First bit stores position(?), second stores level(?)
 
-                    rrfModel.Meshes[i].Vertices[k].Position = (posLevel & 0xF0) >> 4;
-                    rrfModel.Meshes[i].Vertices[k].Level = posLevel & 0x0F;
+                    rrfModel.Meshes[i].Vertices[k].Position = posLevel.Item1;
+                    rrfModel.Meshes[i].Vertices[k].Level = posLevel.Item2;
                 }
 
                 rrfModel.Meshes[i].VertexAttrAddressRange.End = fileStream.Position;

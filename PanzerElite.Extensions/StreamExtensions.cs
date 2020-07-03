@@ -32,6 +32,16 @@ namespace PanzerElite.Extensions
             return BitConverter.ToSingle(floatBuffer);
         }
 
+        public static Tuple<int, int> Read4BitByte(this Stream stream)
+        {
+            var rawByte = stream.ReadByte();
+
+            var halfByte1 = (rawByte & 0xF0) >> 4;
+            var halfByte2 = rawByte & 0xF;
+
+            return new Tuple<int, int>(halfByte1, halfByte2);
+        }
+
         public static string GetPositionAddress(this Stream stream)
         {
             return stream.Position.ToString("x8");

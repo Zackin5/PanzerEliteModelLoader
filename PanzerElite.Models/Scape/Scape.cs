@@ -1,4 +1,7 @@
-﻿namespace PanzerElite.Classes.Scape
+﻿using System.Text.Json.Serialization;
+using PanzerElite.Classes.RRF;
+
+namespace PanzerElite.Classes.Scape
 {
     public class Scape
     {
@@ -13,6 +16,8 @@
             HeightMap = new int[width,height];
             TextureMap = new int[width,height];
             UnknownMap = new int[width,height];
+
+            UnknownCoordsRange = new AddressRange();
         }
 
         public int Unknown1;
@@ -20,10 +25,16 @@
 
         public int Width;
         public int Height;
+        
+        [JsonIgnore]
+        public int[,] HeightMap { get; set; }
+        [JsonIgnore]
+        public int[,] TextureMap { get; set; }
+        [JsonIgnore]
+        public int[,] UnknownMap { get; set; }
 
-        public int[,] HeightMap;
-        public int[,] TextureMap;
-        public int[,] UnknownMap;
+        public int[][,] UnknownCoords;
+        public AddressRange UnknownCoordsRange;
 
         public long HeightMapEndAddress;
     }
