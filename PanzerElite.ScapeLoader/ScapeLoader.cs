@@ -1,7 +1,6 @@
 ﻿using PanzerElite.Classes.Scape;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.IO;
 using PanzerElite.Extensions;
 
@@ -102,19 +101,63 @@ namespace PanzerElite.ScapeLoader
             scape.UnknownData = unknownDataList.ToArray();
             scape.UnknownDataRange.End = fileStream.Position;
 
-            // Unknown data set 3
             ReadTextureProperties(ref scape, fileStream);
 
+            fileStream.Seek(4 * 3, SeekOrigin.Current); // Skip Texture properties termination bits
+
+            ReadModelProperties(ref scape, fileStream);
+
+            ReadEnding(ref scape, fileStream);
+
             return scape;
+        }
+
+        private static void ReadEnding(ref Scape scape, FileStream fileStream)
+        {
+            // Read unknown ending values
+            const int numsPerSection = 4;
+            scape.UnknownEnding = new int[scape.UnknownEndingCount, numsPerSection];
+
+            for (var i = 0; i < scape.UnknownEndingCount; i++)
+            {
+                for (int j = 0; j < numsPerSection; j++)
+                {
+                    scape.UnknownEnding[i, j] = fileStream.ReadInt32();
+                }
+            }
+        }
+        
+        private static void ReadModelProperties(ref Scape scape, FileStream fileStream)
+        {
+            scape.MeshNameCount = fileStream.ReadInt32();
+            scape.UnknownEndingCount = fileStream.ReadInt32();
+
+            // Read mesh info fields
+            const int nameStringLength = 0x10;
+
+            scape.MeshNamesRange.Start = fileStream.Position;
+
+            var meshInfoCount = scape.MeshNameCount;
+            scape.MeshNames = new Tuple<string, int>[meshInfoCount];
+
+            for (var i = 0; i < meshInfoCount; i++)
+            {
+                scape.MeshNames[i] = new Tuple<string, int>(
+                    fileStream.ReadString(nameStringLength),
+                    fileStream.ReadInt16()
+                );
+            }
+            
+            scape.MeshNamesRange.End = fileStream.Position;
         }
 
         private static void ReadTextureProperties(ref Scape scape, FileStream fileStream)
         {
             // Read headers
-            scape.UnknownHeader2_1 = fileStream.ReadInt32();
-            scape.UnknownHeader2_2 = fileStream.ReadInt32();
+            scape.TexturePropertyHeader1 = fileStream.ReadInt32();
+            scape.TexturePropertyHeader2 = fileStream.ReadInt32();
 
-            scape.UnknownDataSet2Range.Start = fileStream.Position;
+            scape.TexturePropertiesRange.Start = fileStream.Position;
 
             // Read data set
             var dataSet = new List<TextureProperties>();
@@ -126,7 +169,7 @@ namespace PanzerElite.ScapeLoader
 
             scape.TextureProperties = dataSet.ToArray();
             
-            scape.UnknownDataSet2Range.End = fileStream.Position;
+            scape.TexturePropertiesRange.End = fileStream.Position;
         }
 
         /// <summary>

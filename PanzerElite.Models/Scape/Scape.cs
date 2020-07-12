@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using PanzerElite.Classes.RRF;
 
 namespace PanzerElite.Classes.Scape
@@ -20,7 +21,8 @@ namespace PanzerElite.Classes.Scape
             HeightMapRange = new AddressRange();
             UnknownCoordsRange = new AddressRange();
             UnknownDataRange = new AddressRange();
-            UnknownDataSet2Range = new AddressRange();
+            TexturePropertiesRange = new AddressRange();
+            MeshNamesRange = new AddressRange();
         }
 
         public int Unknown1;
@@ -57,10 +59,21 @@ namespace PanzerElite.Classes.Scape
         public int[] UnknownData;
         public AddressRange UnknownDataRange;
         
-        public int UnknownHeader2_1;
-        public int UnknownHeader2_2;
+        // Texture properties
+        public int TexturePropertyHeader1;
+        public int TexturePropertyHeader2;
 
         public TextureProperties[] TextureProperties;
-        public AddressRange UnknownDataSet2Range;
+        public AddressRange TexturePropertiesRange;
+
+        // Mesh info
+        public int MeshNameCount;
+        public int UnknownEndingCount;
+
+        public Tuple<string, int>[] MeshNames;
+        public AddressRange MeshNamesRange;
+
+        // Unknown ending data
+        public int[,] UnknownEnding;
     }
 }

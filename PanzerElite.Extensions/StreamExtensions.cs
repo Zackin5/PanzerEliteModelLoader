@@ -46,5 +46,15 @@ namespace PanzerElite.Extensions
         {
             return stream.Position.ToString("x8");
         }
+
+        public static string ReadString(this Stream stream, int stringLength)
+        {
+            var outString = string.Empty;
+
+            for (var i = 0; i < stringLength; i++)
+                outString += (char)stream.ReadByte();
+
+            return outString.TrimEnd('\u0001').TrimEnd('\u0000');
+        }
     }
 }
