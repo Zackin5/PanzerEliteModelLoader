@@ -17,12 +17,16 @@ namespace PanzerElite.Classes.Scape
             TextureMap = new int[width,height];
             UnknownMap = new int[width,height];
 
+            HeightMapRange = new AddressRange();
             UnknownCoordsRange = new AddressRange();
+            UnknownDataRange = new AddressRange();
+            UnknownDataSet2Range = new AddressRange();
         }
 
         public int Unknown1;
         public int Unknown2;
 
+        // Heightmap data
         public int Width;
         public int Height;
         
@@ -33,21 +37,30 @@ namespace PanzerElite.Classes.Scape
         [JsonIgnore]
         public int[,] UnknownMap { get; set; }
 
-        public long HeightMapEndAddress;
+        public AddressRange HeightMapRange;
 
+        // Unknown coordinate set
         public int UnknownCoordsHeader1;
         public int UnknownCoordsHeader2;
-        public int UnknownRange;
+        public int UnknownCoordsCount;
         public int UnknownCoordsHeader4;
 
         [JsonIgnore]
-        public int[][,] UnknownCoords;
+        public int[][] UnknownCoords;
         public AddressRange UnknownCoordsRange;
         
+        // Unknown data set
         public int UnknownHeader1;
-        public int UnknownHeader2;
-        public int UnknownHeader3;
-        public int UnknownHeader4;
+        public int UnknownDataCount;
 
+        [JsonIgnore]
+        public int[] UnknownData;
+        public AddressRange UnknownDataRange;
+        
+        public int UnknownHeader2_1;
+        public int UnknownHeader2_2;
+
+        public UnknownDataSet2[] UnknownDataSet2;
+        public AddressRange UnknownDataSet2Range;
     }
 }

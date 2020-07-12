@@ -1,4 +1,7 @@
-﻿namespace PanzerElite.Classes.RRF
+﻿using Newtonsoft.Json;
+using PanzerElite.Classes.JsonConverters;
+
+namespace PanzerElite.Classes.RRF
 {
     public struct AddressRange
     {
@@ -8,7 +11,9 @@
             End = end;
         }
 
+        [JsonConverter(typeof(HexStringJsonConverter))]
         public long Start;
+        [JsonConverter(typeof(HexStringJsonConverter))]
         public long End;
     }
 }
