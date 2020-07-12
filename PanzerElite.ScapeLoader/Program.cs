@@ -14,27 +14,34 @@ namespace PanzerElite.ScapeLoader
 
             foreach (var scapePath in scapePaths)
             {
-                var fileName = Path.GetFileName(scapePath);
+                try
+                {
+                    var fileName = Path.GetFileName(scapePath);
 
-                Console.WriteLine($"Loading Scape {fileName}");
-                
-                var scapeData = ScapeLoader.Load(scapePath);
+                    Console.WriteLine($"Loading Scape {fileName}");
+                    
+                    var scapeData = ScapeLoader.Load(scapePath);
 
-                // Dump data files
-                var json = JsonConvert.SerializeObject(scapeData, Formatting.Indented);
+                    // Dump data files
+                    var json = JsonConvert.SerializeObject(scapeData, Formatting.Indented);
 
-                var jsonOutputDir = Path.Join(outputDir, "json");
-                var imgOutputDir = Path.Join(outputDir, "img");
+                    var jsonOutputDir = Path.Join(outputDir, "json");
+                    var imgOutputDir = Path.Join(outputDir, "img");
 
-                if (!Directory.Exists(jsonOutputDir))
-                    Directory.CreateDirectory(jsonOutputDir);
+                    if (!Directory.Exists(jsonOutputDir))
+                        Directory.CreateDirectory(jsonOutputDir);
 
-                File.WriteAllText(Path.Join(jsonOutputDir, $"{fileName}.json"), json);
+                    File.WriteAllText(Path.Join(jsonOutputDir, $"{fileName}.json"), json);
 
-                if (!Directory.Exists(imgOutputDir))
-                    Directory.CreateDirectory(imgOutputDir);
+                    if (!Directory.Exists(imgOutputDir))
+                        Directory.CreateDirectory(imgOutputDir);
 
-                ScapeExporter.Export(scapeData, Path.Join(imgOutputDir, $"{fileName}.png"));
+                    ScapeExporter.Export(scapeData, Path.Join(imgOutputDir, $"{fileName}.png"));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
         }
     }

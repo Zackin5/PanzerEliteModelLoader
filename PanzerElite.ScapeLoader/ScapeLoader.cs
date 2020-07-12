@@ -56,10 +56,15 @@ namespace PanzerElite.ScapeLoader
             scape.HeightMapEndAddress = fileStream.Position;
 
             // Load unknown coords;
+            scape.UnknownCoordsHeader1 = fileStream.ReadInt32();
+            scape.UnknownCoordsHeader2 = fileStream.ReadInt32();
+            scape.UnknownRange = fileStream.ReadInt32();
+            scape.UnknownCoordsHeader4 = fileStream.ReadInt32();
+
             scape.UnknownCoordsRange.Start = fileStream.Position;
             var coordArray = new List<int[,]>();
 
-            for (var x = 0; x < scape.Width * 30; x++)
+            for (var x = 0; x < scape.UnknownRange; x++)
             {
                 var coords = new[,]
                 {
@@ -78,6 +83,12 @@ namespace PanzerElite.ScapeLoader
 
             scape.UnknownCoords = coordArray.ToArray();
             scape.UnknownCoordsRange.End = fileStream.Position;
+
+            // Unknown second set
+            scape.UnknownHeader1 = fileStream.ReadInt32();
+            scape.UnknownHeader2 = fileStream.ReadInt32();
+            scape.UnknownHeader3 = fileStream.ReadInt32();
+            scape.UnknownHeader4 = fileStream.ReadInt32();
 
             return scape;
         }

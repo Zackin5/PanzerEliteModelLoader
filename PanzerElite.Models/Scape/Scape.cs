@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 using PanzerElite.Classes.RRF;
 
 namespace PanzerElite.Classes.Scape
@@ -33,9 +33,21 @@ namespace PanzerElite.Classes.Scape
         [JsonIgnore]
         public int[,] UnknownMap { get; set; }
 
+        public long HeightMapEndAddress;
+
+        public int UnknownCoordsHeader1;
+        public int UnknownCoordsHeader2;
+        public int UnknownRange;
+        public int UnknownCoordsHeader4;
+
+        [JsonIgnore]
         public int[][,] UnknownCoords;
         public AddressRange UnknownCoordsRange;
+        
+        public int UnknownHeader1;
+        public int UnknownHeader2;
+        public int UnknownHeader3;
+        public int UnknownHeader4;
 
-        public long HeightMapEndAddress;
     }
 }
