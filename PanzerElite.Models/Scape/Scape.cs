@@ -74,6 +74,6 @@ namespace PanzerElite.Classes.Scape
         public AddressRange MeshNamesRange;
 
         // Unknown ending data
-        public int[,] UnknownEnding;
+        public EndingData[] EndingData;
     }
 }

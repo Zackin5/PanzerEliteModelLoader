@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PanzerElite.Classes.RRF;
 using PanzerElite.Extensions;
 
 namespace PanzerElite.ScapeLoader
@@ -236,15 +237,21 @@ namespace PanzerElite.ScapeLoader
         private static void ReadEnding(ref Scape scape, FileStream fileStream)
         {
             // Read unknown ending values
-            const int numsPerSection = 4;
-            scape.UnknownEnding = new int[scape.UnknownEndingCount, numsPerSection];
+            scape.EndingData = new EndingData[scape.UnknownEndingCount];
 
             for (var i = 0; i < scape.UnknownEndingCount; i++)
             {
-                for (var j = 0; j < numsPerSection; j++)
+                scape.EndingData[i] = new EndingData
                 {
-                    scape.UnknownEnding[i, j] = fileStream.ReadInt32();
-                }
+                    Empty1 = fileStream.ReadInt32(),
+                    Empty2 = fileStream.ReadInt32(),
+                    Unknown1 = fileStream.ReadInt16(),
+                    Unknown2 = (byte)fileStream.ReadByte(),
+                    UnknownFlags1 = (byte)fileStream.ReadByte(),
+                    Empty3 = fileStream.ReadInt16(),
+                    UnknownFlags2 = (byte)fileStream.ReadByte(),
+                    UnknownFlags3 = (byte)fileStream.ReadByte(),
+                };
             }
         }
     }
