@@ -60,7 +60,7 @@ namespace PanzerElite.Classes.Scape
         public int UnknownHeader2_1;
         public int UnknownHeader2_2;
 
-        public UnknownDataSet2[] UnknownDataSet2;
+        public TextureProperties[] TextureProperties;
         public AddressRange UnknownDataSet2Range;
     }
 }

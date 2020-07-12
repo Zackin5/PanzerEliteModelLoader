@@ -1,6 +1,7 @@
 ﻿using PanzerElite.Classes.Scape;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using PanzerElite.Extensions;
 
@@ -102,12 +103,12 @@ namespace PanzerElite.ScapeLoader
             scape.UnknownDataRange.End = fileStream.Position;
 
             // Unknown data set 3
-            ReadUnknownDataSet2(ref scape, fileStream);
+            ReadTextureProperties(ref scape, fileStream);
 
             return scape;
         }
 
-        private static void ReadUnknownDataSet2(ref Scape scape, FileStream fileStream)
+        private static void ReadTextureProperties(ref Scape scape, FileStream fileStream)
         {
             // Read headers
             scape.UnknownHeader2_1 = fileStream.ReadInt32();
@@ -116,41 +117,76 @@ namespace PanzerElite.ScapeLoader
             scape.UnknownDataSet2Range.Start = fileStream.Position;
 
             // Read data set
-            var dataSetSize = scape.UnknownHeader2_1;
-            var dataSet = new UnknownDataSet2[scape.UnknownHeader2_1];
+            var dataSet = new List<TextureProperties>();
 
-            for (var i = 0; i < dataSetSize; i++)
+            while (ReadSingleTextureProperties(fileStream, out var result))
             {
-                // Read unknown properties
-                const int byte32Count = 0x5C / 4;
-                var unknownProp = new int[byte32Count];
-
-                for (var j = 0; j < byte32Count; j++)
-                {
-                    unknownProp[j] = fileStream.ReadInt32();
-                }
-
-                // Read unknown 16 bits
-                const int byte16Count = 16;
-                var unknown16Bits = new int[byte16Count];
-
-                for (var j = 0; j < byte16Count; j++)
-                {
-                    unknown16Bits[j] = fileStream.ReadInt16();
-                }
-
-                // Create data set object
-                dataSet[i] = new UnknownDataSet2
-                {
-                    UnknownProperties = unknownProp,
-                    Unknown16Bits = unknown16Bits,
-                    Index = fileStream.ReadInt32()
-                };
+                dataSet.Add(result);
             }
 
-            scape.UnknownDataSet2 = dataSet;
+            scape.TextureProperties = dataSet.ToArray();
             
             scape.UnknownDataSet2Range.End = fileStream.Position;
+        }
+
+        /// <summary>
+        /// Read a TextureProperties class
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <param name="result"></param>
+        /// <returns>Returns false if a exit flag or end of file was hit</returns>
+        private static bool ReadSingleTextureProperties(FileStream fileStream, out TextureProperties result)
+        {
+            var startingPos = fileStream.Position;
+
+            // Read unknown properties
+            const int byte32Count = 0x54 / 4;
+            var unknownProp = new int[byte32Count];
+
+            for (var j = 0; j < byte32Count; j++)
+            {
+                if (fileStream.Position >= fileStream.Length)
+                {
+                    // Hit end of file, terminate read
+                    fileStream.Seek(startingPos, SeekOrigin.Begin);
+                    result = null;
+                    return false;
+                }
+
+                unknownProp[j] = fileStream.ReadInt32();
+            }
+
+            // Exit if we read an exit string
+            if (unknownProp[0] == 0 && // 00 00 00 00
+                unknownProp[1] == 4100 && // 04 10 00 00
+                unknownProp[2] == 16) // 10 00 00 00
+            {
+                fileStream.Seek(startingPos, SeekOrigin.Begin);
+                result = null;
+                return false;
+            }
+
+            result = new TextureProperties
+            {
+                UnknownProperties = unknownProp,
+                Index = fileStream.ReadInt32(),
+                Unknown1 = fileStream.ReadInt32()
+            };
+
+            // Read unknown 16 bits
+            const int byte16Count = 16;
+            var unknown16Bits = new int[byte16Count];
+
+            for (var j = 0; j < byte16Count; j++)
+            {
+                unknown16Bits[j] = fileStream.ReadInt16();
+            }
+
+            // Create data set object
+            result.TilePropertyFlags = unknown16Bits;
+            result.UnknownIndex = fileStream.ReadInt32();
+
+            return true;
         }
     }
 }

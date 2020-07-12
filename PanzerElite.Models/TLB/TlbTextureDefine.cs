@@ -9,7 +9,7 @@ namespace PanzerElite.Classes.TLB
         public int AnimSpeed;
 
         /// <summary>
-        /// Counts number of times Index has rolled over
+        /// Counts number of times UnknownIndex has rolled over
         /// </summary>
         public int RolloverIndex;
         public int AnimTexSize;

@@ -14,8 +14,8 @@ namespace PanzerElite.Classes.RRF
         public AddressRange AddressRange;
 
         public int[] VertexIndexes;     // Note: Vertex ordering determines texture rotation
-        public int TextureIndex;    // Index of the texture to use from a TLB file
-        public int TextureFileIndex;    // Index of the texture TLB file to use for the scenario type
+        public int TextureIndex;    // UnknownIndex of the texture to use from a TLB file
+        public int TextureFileIndex;    // UnknownIndex of the texture TLB file to use for the scenario type
         public int TextureRolloverIndex;    // Rollover index for TLB file texture mapping
         public int[] TextureProperties; // RolloverIndex texture assignment properties
 
