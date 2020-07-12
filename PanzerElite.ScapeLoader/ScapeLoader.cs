@@ -87,20 +87,20 @@ namespace PanzerElite.ScapeLoader
             scape.UnknownCoordsHeader4 = fileStream.ReadInt32();
 
             scape.UnknownCoordsRange.Start = fileStream.Position;
-            var coordArray = new List<int[]>();
 
+            scape.UnknownCoords = new UnknownCoord[scape.UnknownCoordsCount];
+            
             for (var i = 0; i < scape.UnknownCoordsCount; i++)
             {
-                var coords = new[]
+                scape.UnknownCoords[i] = new UnknownCoord
                 {
-                    fileStream.ReadInt32(),
-                    fileStream.ReadInt32()
+                    Empty1 = fileStream.ReadInt32(),
+                    UByte1 = (byte)fileStream.ReadByte(),
+                    UByte2 = (byte)fileStream.ReadByte(),
+                    UShort = fileStream.ReadInt16(),
                 };
-
-                coordArray.Add(coords);
             }
 
-            scape.UnknownCoords = coordArray.ToArray();
             scape.UnknownCoordsRange.End = fileStream.Position;
         }
 

@@ -47,8 +47,8 @@ namespace PanzerElite.Classes.Scape
         public int UnknownCoordsCount;
         public int UnknownCoordsHeader4;
 
-        [JsonIgnore]
-        public int[][] UnknownCoords;
+        //[JsonIgnore]
+        public UnknownCoord[] UnknownCoords;
         public AddressRange UnknownCoordsRange;
         
         // Unknown data set
