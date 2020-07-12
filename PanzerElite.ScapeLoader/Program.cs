@@ -14,34 +14,33 @@ namespace PanzerElite.ScapeLoader
 
             foreach (var scapePath in scapePaths)
             {
-                try
+                var fileName = Path.GetFileName(scapePath);
+
+                if (!File.Exists(scapePath))
                 {
-                    var fileName = Path.GetFileName(scapePath);
-
-                    Console.WriteLine($"Loading Scape {fileName}");
-                    
-                    var scapeData = ScapeLoader.Load(scapePath);
-
-                    // Dump data files
-                    var json = JsonConvert.SerializeObject(scapeData, Formatting.Indented);
-
-                    var jsonOutputDir = Path.Join(outputDir, "json");
-                    var imgOutputDir = Path.Join(outputDir, "img");
-
-                    if (!Directory.Exists(jsonOutputDir))
-                        Directory.CreateDirectory(jsonOutputDir);
-
-                    File.WriteAllText(Path.Join(jsonOutputDir, $"{fileName}.json"), json);
-
-                    if (!Directory.Exists(imgOutputDir))
-                        Directory.CreateDirectory(imgOutputDir);
-
-                    ScapeExporter.Export(scapeData, Path.Join(imgOutputDir, $"{fileName}.png"));
+                    Console.WriteLine($"Failed to find file {fileName}");
+                    continue;
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+
+                Console.WriteLine($"Loading Scape {fileName}");
+
+                var scapeData = ScapeLoader.Load(scapePath);
+
+                // Dump data files
+                var json = JsonConvert.SerializeObject(scapeData, Formatting.Indented);
+
+                var jsonOutputDir = Path.Join(outputDir, "json");
+                var imgOutputDir = Path.Join(outputDir, "img");
+
+                if (!Directory.Exists(jsonOutputDir))
+                    Directory.CreateDirectory(jsonOutputDir);
+
+                File.WriteAllText(Path.Join(jsonOutputDir, $"{fileName}.json"), json);
+
+                if (!Directory.Exists(imgOutputDir))
+                    Directory.CreateDirectory(imgOutputDir);
+
+                ScapeExporter.Export(scapeData, Path.Join(imgOutputDir, $"{fileName}.png"));
             }
         }
     }

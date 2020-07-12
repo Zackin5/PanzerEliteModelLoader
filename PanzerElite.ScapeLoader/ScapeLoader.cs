@@ -147,6 +147,7 @@ namespace PanzerElite.ScapeLoader
             {
                 if (fileStream.Position >= fileStream.Length)
                 {
+                    Console.WriteLine(@"/!\ HIT END OF FILE EARLY /!\");
                     // Hit end of file, terminate read
                     fileStream.Seek(startingPos, SeekOrigin.Begin);
                     result = null;
