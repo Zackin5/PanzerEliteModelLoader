@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PanzerElite.Classes", "Panz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PanzerElite.Extensions", "PanzerElite.Extensions\PanzerElite.Extensions.csproj", "{086EE849-637C-490E-9601-A45C16AEBE5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PanzerElite.ScapeLoader", "PanzerElite.ScapeLoader\PanzerElite.ScapeLoader.csproj", "{5CE1EDB9-EB7A-4A65-B398-2943CC7C798D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PanzerElite.ScapeLoader", "PanzerElite.ScapeLoader\PanzerElite.ScapeLoader.csproj", "{5CE1EDB9-EB7A-4A65-B398-2943CC7C798D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScapeDebugOverwrite", "ScapeDebugOverwrite\ScapeDebugOverwrite.csproj", "{5C7EB806-E870-448C-8A3B-9DA5ABA8E86B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5CE1EDB9-EB7A-4A65-B398-2943CC7C798D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CE1EDB9-EB7A-4A65-B398-2943CC7C798D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CE1EDB9-EB7A-4A65-B398-2943CC7C798D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C7EB806-E870-448C-8A3B-9DA5ABA8E86B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7EB806-E870-448C-8A3B-9DA5ABA8E86B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7EB806-E870-448C-8A3B-9DA5ABA8E86B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7EB806-E870-448C-8A3B-9DA5ABA8E86B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

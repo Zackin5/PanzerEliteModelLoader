@@ -45,7 +45,7 @@ namespace PanzerElite.ScapeLoader
 
             ReadHeightMap(ref scape, fileStream);
 
-            ReadUnknownCoords(ref scape, fileStream);
+            ReadTextureCoords(ref scape, fileStream);
 
             ReadUnknownData(ref scape, fileStream);
 
@@ -78,21 +78,21 @@ namespace PanzerElite.ScapeLoader
             scape.HeightMapRange.End = fileStream.Position;
         }
 
-        private static void ReadUnknownCoords(ref Scape scape, FileStream fileStream)
+        private static void ReadTextureCoords(ref Scape scape, FileStream fileStream)
         {
             // Load unknown coords
-            scape.UnknownCoordsHeader1 = fileStream.ReadInt32();
-            scape.UnknownCoordsHeader2 = fileStream.ReadInt32();
-            scape.UnknownCoordsCount = fileStream.ReadInt32();
-            scape.UnknownCoordsHeader4 = fileStream.ReadInt32();
+            scape.TextureCoordsHeader1 = fileStream.ReadInt32();
+            scape.TextureCoordsHeader2 = fileStream.ReadInt32();
+            scape.TextureCoordsCount = fileStream.ReadInt32();
+            scape.TextureCoordsHeader4 = fileStream.ReadInt32();
 
-            scape.UnknownCoordsRange.Start = fileStream.Position;
+            scape.TextureCoordsRange.Start = fileStream.Position;
 
-            scape.UnknownCoords = new UnknownCoord[scape.UnknownCoordsCount];
+            scape.TextureCoords = new TextureCoord[scape.TextureCoordsCount];
             
-            for (var i = 0; i < scape.UnknownCoordsCount; i++)
+            for (var i = 0; i < scape.TextureCoordsCount; i++)
             {
-                scape.UnknownCoords[i] = new UnknownCoord
+                scape.TextureCoords[i] = new TextureCoord
                 {
                     Empty1 = fileStream.ReadInt32(),
                     UByte1 = (byte)fileStream.ReadByte(),
@@ -101,7 +101,7 @@ namespace PanzerElite.ScapeLoader
                 };
             }
 
-            scape.UnknownCoordsRange.End = fileStream.Position;
+            scape.TextureCoordsRange.End = fileStream.Position;
         }
 
         private static void ReadUnknownData(ref Scape scape, FileStream fileStream)

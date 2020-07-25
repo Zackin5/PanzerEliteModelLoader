@@ -19,7 +19,7 @@ namespace PanzerElite.Classes.Scape
             UnknownMap = new int[width,height];
 
             HeightMapRange = new AddressRange();
-            UnknownCoordsRange = new AddressRange();
+            TextureCoordsRange = new AddressRange();
             UnknownDataRange = new AddressRange();
             TexturePropertiesRange = new AddressRange();
             MeshNamesRange = new AddressRange();
@@ -42,14 +42,14 @@ namespace PanzerElite.Classes.Scape
         public AddressRange HeightMapRange;
 
         // Unknown coordinate set
-        public int UnknownCoordsHeader1;
-        public int UnknownCoordsHeader2;
-        public int UnknownCoordsCount;
-        public int UnknownCoordsHeader4;
+        public int TextureCoordsHeader1;
+        public int TextureCoordsHeader2;
+        public int TextureCoordsCount;
+        public int TextureCoordsHeader4;
 
         //[JsonIgnore]
-        public UnknownCoord[] UnknownCoords;
-        public AddressRange UnknownCoordsRange;
+        public TextureCoord[] TextureCoords;
+        public AddressRange TextureCoordsRange;
         
         // Unknown data set
         public int UnknownHeader1;
