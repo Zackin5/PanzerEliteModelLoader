@@ -55,7 +55,7 @@ namespace PanzerElite.ScapeLoader
 
             ReadModelProperties(ref scape, fileStream);
 
-            ReadEnding(ref scape, fileStream);
+            ReadMeshPosition(ref scape, fileStream);
 
             return scape;
         }
@@ -234,25 +234,28 @@ namespace PanzerElite.ScapeLoader
             scape.MeshNamesRange.End = fileStream.Position;
         }
 
-        private static void ReadEnding(ref Scape scape, FileStream fileStream)
+        private static void ReadMeshPosition(ref Scape scape, FileStream fileStream)
         {
             // Read unknown ending values
-            scape.EndingData = new EndingData[scape.UnknownEndingCount];
+            scape.MeshPosition = new MeshPosition[scape.UnknownEndingCount];
+            scape.MeshPositionRange.Start = fileStream.Position;
 
             for (var i = 0; i < scape.UnknownEndingCount; i++)
             {
-                scape.EndingData[i] = new EndingData
+                scape.MeshPosition[i] = new MeshPosition
                 {
                     Empty1 = fileStream.ReadInt32(),
                     Empty2 = fileStream.ReadInt32(),
-                    Unknown1 = fileStream.ReadInt16(),
+                    MeshIndex = fileStream.ReadInt16(),
                     Unknown2 = (byte)fileStream.ReadByte(),
-                    UnknownFlags1 = (byte)fileStream.ReadByte(),
+                    Rotation = (byte)fileStream.ReadByte(),
                     Empty3 = fileStream.ReadInt16(),
                     UnknownFlags2 = (byte)fileStream.ReadByte(),
                     UnknownFlags3 = (byte)fileStream.ReadByte(),
                 };
             }
+            
+            scape.MeshPositionRange.End = fileStream.Position;
         }
     }
 }

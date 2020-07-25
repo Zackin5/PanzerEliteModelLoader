@@ -17,8 +17,10 @@ namespace ScapeDebugOverwrite
             
             var wipeTextureMap = args.Skip(1).Contains("-mt", StringComparer.OrdinalIgnoreCase);
             var wipeUnknownMap = args.Skip(1).Contains("-mu", StringComparer.OrdinalIgnoreCase);
-            var wipeUnknownCoordBytes = args.Skip(1).Contains("-ucb", StringComparer.OrdinalIgnoreCase);
-            var wipeUnknownCoordShorts = args.Skip(1).Contains("-uci", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureCoordBytes = args.Skip(1).Contains("-txb", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureCoordShorts = args.Skip(1).Contains("-txi", StringComparer.OrdinalIgnoreCase);
+            var wipeUnknownData = args.Skip(1).Contains("-du", StringComparer.OrdinalIgnoreCase);
+            var wipeEndingData = args.Skip(1).Contains("-en", StringComparer.OrdinalIgnoreCase);
 
             Console.WriteLine($"Overwriting debug info to {mapPath}");
 
@@ -40,6 +42,7 @@ namespace ScapeDebugOverwrite
 
             // Datatype write consts
             var emptyInt16 = new byte[] { 0, 0 };
+            var emptyInt32 = new byte[] { 0, 0, 0, 0 };
 
             // Overwrite
             using (var fileStream = new FileStream(mapPath, FileMode.Open, FileAccess.ReadWrite))
@@ -70,7 +73,8 @@ namespace ScapeDebugOverwrite
                     }
                 }
 
-                if (wipeUnknownCoordBytes || wipeUnknownCoordShorts)
+                // Texture coord overwrite
+                if (wipeTextureCoordBytes || wipeTextureCoordShorts)
                 {
                     fileStream.Seek(mapData.TextureCoordsRange.Start, SeekOrigin.Begin);
 
@@ -78,7 +82,7 @@ namespace ScapeDebugOverwrite
                     {
                         fileStream.Seek(4, SeekOrigin.Current); // Skip Empty1
 
-                        if (wipeUnknownCoordBytes)
+                        if (wipeTextureCoordBytes)
                         {
                             fileStream.Seek(1, SeekOrigin.Current); // Skip byte pair
                             fileStream.WriteByte(0);
@@ -89,7 +93,7 @@ namespace ScapeDebugOverwrite
                             fileStream.Seek(2, SeekOrigin.Current); // Skip byte pair
                         }
 
-                        if (wipeUnknownCoordShorts)
+                        if (wipeTextureCoordShorts)
                         {
                             fileStream.Write(emptyInt16);
                         }
@@ -97,6 +101,51 @@ namespace ScapeDebugOverwrite
                         {
                             fileStream.Seek(2, SeekOrigin.Current); // Skip UShort
                         }
+                    }
+                }
+
+                // Unknown data overwrite
+                if (wipeUnknownData)
+                {
+                    fileStream.Seek(mapData.UnknownDataRange.Start, SeekOrigin.Begin);
+
+                    for (var i = 0; i < mapData.UnknownDataCount * 4 * 4; i++)
+                    {
+                        fileStream.WriteByte(0);
+                    }
+                }
+
+                // Ending data overwrite
+                if (wipeEndingData)
+                {
+                    fileStream.Seek(mapData.MeshPositionRange.Start, SeekOrigin.Begin);
+
+                    for (var i = 0; i < mapData.UnknownEndingCount; i++)
+                    {
+                        fileStream.Write(emptyInt32);
+                        fileStream.Write(emptyInt32);
+
+                        fileStream.Write(emptyInt16);
+                        fileStream.WriteByte(0);
+                        fileStream.WriteByte(0);
+
+                        fileStream.Write(emptyInt16);
+
+                        fileStream.WriteByte(0);
+                        fileStream.WriteByte(0);
+
+                        /*
+                        fileStream.Seek(4, SeekOrigin.Current);
+                        fileStream.Seek(4, SeekOrigin.Current);
+
+                        fileStream.Seek(2, SeekOrigin.Current);
+                        fileStream.Seek(1, SeekOrigin.Current);
+                        fileStream.Seek(1, SeekOrigin.Current);
+                        fileStream.Seek(2, SeekOrigin.Current);
+
+                        fileStream.Seek(1, SeekOrigin.Current);
+                        fileStream.Seek(1, SeekOrigin.Current);
+                        */
                     }
                 }
             }

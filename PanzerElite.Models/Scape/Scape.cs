@@ -23,6 +23,7 @@ namespace PanzerElite.Classes.Scape
             UnknownDataRange = new AddressRange();
             TexturePropertiesRange = new AddressRange();
             MeshNamesRange = new AddressRange();
+            MeshPositionRange = new AddressRange();
         }
 
         public int Unknown1;
@@ -73,7 +74,8 @@ namespace PanzerElite.Classes.Scape
         public Tuple<string, int>[] MeshNames;
         public AddressRange MeshNamesRange;
 
-        // Unknown ending data
-        public EndingData[] EndingData;
+        // Mesh position data
+        public MeshPosition[] MeshPosition;
+        public AddressRange MeshPositionRange;
     }
 }
