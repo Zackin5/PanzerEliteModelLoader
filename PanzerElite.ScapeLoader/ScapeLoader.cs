@@ -51,7 +51,7 @@ namespace PanzerElite.ScapeLoader
 
             ReadTextureProperties(ref scape, fileStream);
 
-            fileStream.Seek(4 * 3, SeekOrigin.Current); // Skip Texture properties termination bits
+            fileStream.Seek(4 * 2, SeekOrigin.Current); // Skip Texture properties termination bits
 
             ReadModelProperties(ref scape, fileStream);
 
@@ -133,14 +133,16 @@ namespace PanzerElite.ScapeLoader
             // Read headers
             scape.TexturePropertyHeader1 = fileStream.ReadInt32();
             scape.TexturePropertyHeader2 = fileStream.ReadInt32();
+            scape.TexturePropertiesCount = fileStream.ReadInt32();
 
             scape.TexturePropertiesRange.Start = fileStream.Position;
 
             // Read data set
             var dataSet = new List<TextureProperties>();
 
-            while (ReadSingleTextureProperties(fileStream, out var result))
+            for (var i = 0; i < scape.TexturePropertiesCount; i++)
             {
+                ReadSingleTextureProperties(fileStream, out var result);
                 dataSet.Add(result);
             }
 
@@ -155,12 +157,12 @@ namespace PanzerElite.ScapeLoader
         /// <param name="fileStream"></param>
         /// <param name="result"></param>
         /// <returns>Returns false if a exit flag or end of file was hit</returns>
-        private static bool ReadSingleTextureProperties(FileStream fileStream, out TextureProperties result)
+        private static void ReadSingleTextureProperties(FileStream fileStream, out TextureProperties result)
         {
             var startingPos = fileStream.Position;
 
             // Read unknown properties
-            const int byte32Count = 0x54 / 4;
+            const int byte32Count = 20;
             var unknownProp = new int[byte32Count];
 
             for (var j = 0; j < byte32Count; j++)
@@ -171,20 +173,10 @@ namespace PanzerElite.ScapeLoader
                     // Hit end of file, terminate read
                     fileStream.Seek(startingPos, SeekOrigin.Begin);
                     result = null;
-                    return false;
+                    return;
                 }
 
                 unknownProp[j] = fileStream.ReadInt32();
-            }
-
-            // Exit if we read an exit string
-            if (unknownProp[0] == 0 && // 00 00 00 00
-                unknownProp[1] == 4100 && // 04 10 00 00
-                unknownProp[2] == 16) // 10 00 00 00
-            {
-                fileStream.Seek(startingPos, SeekOrigin.Begin);
-                result = null;
-                return false;
             }
 
             result = new TextureProperties
@@ -206,8 +198,7 @@ namespace PanzerElite.ScapeLoader
             // Create data set object
             result.TilePropertyFlags = unknown16Bits;
             result.UnknownIndex = fileStream.ReadInt32();
-
-            return true;
+            result.Unknown2 = fileStream.ReadInt32();
         }
         
         private static void ReadModelProperties(ref Scape scape, FileStream fileStream)

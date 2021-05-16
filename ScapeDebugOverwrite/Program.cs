@@ -43,7 +43,7 @@ namespace ScapeDebugOverwrite
             }
 
             // Datatype write consts
-            var emptyInt16 = new byte[] { 0, 0 };
+            var emptyInt16 = new byte[] { 0x01, 0xff };
             var emptyInt32 = new byte[] { 0, 0, 0, 0 };
 
             // Overwrite
@@ -89,9 +89,9 @@ namespace ScapeDebugOverwrite
 
                         if (wipeTextureCoordBytes)
                         {
-                            fileStream.WriteByte(0);
+                            fileStream.WriteByte(0xff);
                             //fileStream.Seek(1, SeekOrigin.Current); // Skip byte pair
-                            fileStream.WriteByte(0);
+                            fileStream.WriteByte(0xff);
                         }
                         else
                         {

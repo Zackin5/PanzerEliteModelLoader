@@ -64,6 +64,7 @@ namespace PanzerElite.Classes.Scape
         public int TexturePropertyHeader1;
         public int TexturePropertyHeader2;
 
+        public int TexturePropertiesCount;
         public TextureProperties[] TextureProperties;
         public AddressRange TexturePropertiesRange;
 

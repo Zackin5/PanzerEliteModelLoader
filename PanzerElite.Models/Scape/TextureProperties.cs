@@ -12,5 +12,6 @@ namespace PanzerElite.Classes.Scape
         [JsonIgnore]
         public int[] TilePropertyFlags; // Pretty sure these are texture attribute flags for 4x4 grid items
         public int UnknownIndex;  // Ground class?
+        public int Unknown2;  // Unknown post-index value
     }
 }
