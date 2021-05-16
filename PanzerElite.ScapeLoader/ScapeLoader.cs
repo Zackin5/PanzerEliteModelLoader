@@ -94,9 +94,9 @@ namespace PanzerElite.ScapeLoader
             {
                 scape.TextureCoords[i] = new TextureCoord
                 {
-                    Empty1 = fileStream.ReadInt32(),
-                    UByte1 = (byte)fileStream.ReadByte(),
-                    UByte2 = (byte)fileStream.ReadByte(),
+                    ModelIndex = fileStream.ReadInt32(),
+                    Height = (byte)fileStream.ReadByte(),
+                    ImageCoord = (byte)fileStream.ReadByte(),
                     UShort = fileStream.ReadInt16(),
                 };
             }

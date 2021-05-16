@@ -4,7 +4,7 @@ namespace PanzerElite.Classes.Scape
 {
     public class TextureProperties    // Pretty sure these are texture attributes info
     {
-        [JsonIgnore]
+        //[JsonIgnore]
         public int[] UnknownProperties;
         public int Index;  // Texture and/or ground index?
         public int Unknown1;  // Unknown post-index value

@@ -2,11 +2,11 @@
 {
     public class TextureCoord
     {
-        // Currently all of these data types are guesses
-        public int Empty1;
+        public int ModelIndex;  // Index of mesh information for tile
 
-        public byte UByte1; // Texture coord/index?
-        public byte UByte2; // Texture coord/index?
+        public byte Height;     // Seems to affect terrain height/slope??
+        // P sure these are indexes for the texture properties
+        public byte ImageCoord; // pixel coord in image? -1 ?
         public short UShort;    // Texture rollover index?
     }
 }

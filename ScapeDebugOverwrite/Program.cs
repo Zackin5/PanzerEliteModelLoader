@@ -17,8 +17,10 @@ namespace ScapeDebugOverwrite
             
             var wipeTextureMap = args.Skip(1).Contains("-mt", StringComparer.OrdinalIgnoreCase);
             var wipeUnknownMap = args.Skip(1).Contains("-mu", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureModel = args.Skip(1).Contains("-txm", StringComparer.OrdinalIgnoreCase);
             var wipeTextureCoordBytes = args.Skip(1).Contains("-txb", StringComparer.OrdinalIgnoreCase);
             var wipeTextureCoordShorts = args.Skip(1).Contains("-txi", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureProperties = args.Skip(1).Contains("-txp", StringComparer.OrdinalIgnoreCase);
             var wipeUnknownData = args.Skip(1).Contains("-du", StringComparer.OrdinalIgnoreCase);
             var wipeEndingData = args.Skip(1).Contains("-en", StringComparer.OrdinalIgnoreCase);
 
@@ -80,13 +82,16 @@ namespace ScapeDebugOverwrite
 
                     for (var i = 0; i < mapData.TextureCoordsCount; i++)
                     {
-                        fileStream.Seek(4, SeekOrigin.Current); // Skip Empty1
+                        if(wipeTextureModel)
+                            fileStream.Write(emptyInt32);
+                        else
+                            fileStream.Seek(4, SeekOrigin.Current); // Skip ModelIndex
 
                         if (wipeTextureCoordBytes)
                         {
-                            fileStream.Seek(1, SeekOrigin.Current); // Skip byte pair
                             fileStream.WriteByte(0);
-                            //fileStream.WriteByte(0);
+                            //fileStream.Seek(1, SeekOrigin.Current); // Skip byte pair
+                            fileStream.WriteByte(0);
                         }
                         else
                         {
@@ -110,6 +115,17 @@ namespace ScapeDebugOverwrite
                     fileStream.Seek(mapData.UnknownDataRange.Start, SeekOrigin.Begin);
 
                     for (var i = 0; i < mapData.UnknownDataCount * 4 * 4; i++)
+                    {
+                        fileStream.WriteByte(0);
+                    }
+                }
+
+                // Unknown data overwrite
+                if (wipeTextureProperties)
+                {
+                    fileStream.Seek(mapData.TexturePropertiesRange.Start, SeekOrigin.Begin);
+
+                    while (fileStream.Position < mapData.TexturePropertiesRange.End)
                     {
                         fileStream.WriteByte(0);
                     }

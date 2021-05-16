@@ -23,6 +23,15 @@ namespace PanzerElite.Extensions
             return BitConverter.ToInt16(intBuffer);
         }
 
+        public static ushort ReadUInt16(this Stream stream)
+        {
+            var intBuffer = new byte[2];
+
+            stream.Read(intBuffer);
+
+            return BitConverter.ToUInt16(intBuffer, 0);
+        }
+
         public static float ReadFloat(this Stream stream)
         {
             var floatBuffer = new byte[4];
