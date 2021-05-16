@@ -3,12 +3,12 @@
     public class TexturePropertyFlag
     {
         public byte SinkDepth;
-        public byte Height;
+        public byte Height;         // Untested
         public byte GroundClass;    // Ground type
         public byte BrakingFactor;  // Drag/braking factor
     }
 
-    public class TextureProperties    // Pretty sure these are texture attributes info
+    public class TextureProperty    // Pretty sure these are texture attributes info
     {
         public int[] TextureIndexes; // Close LOD texture indexes?
         public int Index;  // Texture and/or ground index?

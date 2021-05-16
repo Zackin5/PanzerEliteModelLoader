@@ -28,6 +28,11 @@ namespace ScapeDebugOverwrite
             var wipeTextureUnknown3 = args.Skip(1).Contains("-tu3", StringComparer.OrdinalIgnoreCase);
             var wipeTextureUnknown4 = args.Skip(1).Contains("-tu4", StringComparer.OrdinalIgnoreCase);
 
+            var wipeHeightmapUnknown1 = args.Skip(1).Contains("-hu1", StringComparer.OrdinalIgnoreCase);
+            var wipeHeightmapUnknown2 = args.Skip(1).Contains("-hu2", StringComparer.OrdinalIgnoreCase);
+            var wipeHeightmapUnknown3 = args.Skip(1).Contains("-hu3", StringComparer.OrdinalIgnoreCase);
+            var wipeHeightmapUnknown4 = args.Skip(1).Contains("-hu4", StringComparer.OrdinalIgnoreCase);
+
             var wipeUnknownData = args.Skip(1).Contains("-du", StringComparer.OrdinalIgnoreCase);
             var wipeEndingData = args.Skip(1).Contains("-en", StringComparer.OrdinalIgnoreCase);
 
@@ -122,25 +127,55 @@ namespace ScapeDebugOverwrite
                     }
                 }
 
-                // Unknown data overwrite
-                if (wipeUnknownData)
+                // Bumpmap data overwrite
+                if (wipeHeightmapUnknown1 || wipeHeightmapUnknown2 || wipeHeightmapUnknown3 || wipeHeightmapUnknown4)
                 {
-                    fileStream.Seek(mapData.UnknownDataRange.Start, SeekOrigin.Begin);
+                    fileStream.Seek(mapData.HeightPropertiesRange.Start, SeekOrigin.Begin);
 
-                    for (var i = 0; i < mapData.UnknownDataCount * 4 * 4; i++)
+                    while (fileStream.Position < mapData.HeightPropertiesRange.End)
                     {
-                        fileStream.WriteByte(0);
+                        if (wipeHeightmapUnknown1)
+                        {
+                            fileStream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
+
+                        if (wipeHeightmapUnknown2)
+                        {
+                            fileStream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
+
+                        if (wipeHeightmapUnknown3)
+                        {
+                            fileStream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
+
+                        if (wipeHeightmapUnknown4)
+                        {
+                            fileStream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
                     }
                 }
                 
-                // Unknown data overwrite
+                // Texture properties overwrite
                 if (wipeTextureCloseLod || wipeTextureUnknown1 || wipeTexturePropertyFlags || wipeTextureUnknown3 || wipeTextureUnknown4)
                 {
-                    fileStream.Seek(mapData.TexturePropertiesRange.Start - 4, SeekOrigin.Begin);
-                    
-                    var texturePropertiesCount = fileStream.ReadInt32();
-
-                    Console.WriteLine($"{texturePropertiesCount} texture properties");
+                    fileStream.Seek(mapData.TexturePropertiesRange.Start, SeekOrigin.Begin);
 
                     while (fileStream.Position < mapData.TexturePropertiesRange.End)
                     {

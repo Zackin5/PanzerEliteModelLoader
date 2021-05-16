@@ -20,7 +20,7 @@ namespace PanzerElite.Classes.Scape
 
             HeightMapRange = new AddressRange();
             TextureCoordsRange = new AddressRange();
-            UnknownDataRange = new AddressRange();
+            HeightPropertiesRange = new AddressRange();
             TexturePropertiesRange = new AddressRange();
             MeshNamesRange = new AddressRange();
             MeshPositionRange = new AddressRange();
@@ -52,20 +52,19 @@ namespace PanzerElite.Classes.Scape
         public TextureCoord[] TextureCoords;
         public AddressRange TextureCoordsRange;
         
-        // Unknown data set
-        public int UnknownHeader1;
-        public int UnknownDataCount;
+        // Close LOD heightmap data set
+        public int HeightPropertyHeader1;
 
-        [JsonIgnore]
-        public int[] UnknownData;
-        public AddressRange UnknownDataRange;
+        public int HeightPropertiesCount;
+        public HeightProperty[] HeightProperties;
+        public AddressRange HeightPropertiesRange;
         
         // Texture properties
         public int TexturePropertyHeader1;
         public int TexturePropertyHeader2;
 
         public int TexturePropertiesCount;
-        public TextureProperties[] TextureProperties;
+        public TextureProperty[] TextureProperties;
         public AddressRange TexturePropertiesRange;
 
         // Mesh info

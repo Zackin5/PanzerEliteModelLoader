@@ -46,7 +46,7 @@ namespace PanzerElite.ScapeLoader
 
             ReadTextureCoords(ref scape, fileStream);
 
-            ReadUnknownData(ref scape, fileStream);
+            ReadHeightProperties(ref scape, fileStream);
 
             ReadTextureProperties(ref scape, fileStream);
 
@@ -103,28 +103,31 @@ namespace PanzerElite.ScapeLoader
             scape.TextureCoordsRange.End = fileStream.Position;
         }
 
-        private static void ReadUnknownData(ref Scape scape, FileStream fileStream)
+        private static void ReadHeightProperties(ref Scape scape, FileStream fileStream)
         {
             // Unknown data set 2
-            scape.UnknownHeader1 = fileStream.ReadInt32();
-            scape.UnknownDataCount = fileStream.ReadInt32();
+            scape.HeightPropertyHeader1 = fileStream.ReadInt32();
+            scape.HeightPropertiesCount = fileStream.ReadInt32();
 
-            scape.UnknownDataRange.Start = fileStream.Position;
-            var unknownDataList = new List<int>();
+            scape.HeightPropertiesRange.Start = fileStream.Position;
+            scape.HeightProperties = new HeightProperty[scape.HeightPropertiesCount];
 
-            for (var i = 0; i < scape.UnknownDataCount; i++)
+            for (var i = 0; i < scape.HeightPropertiesCount; i++)
             {
-                unknownDataList.AddRange(new[]
+                scape.HeightProperties[i] = new HeightProperty
                 {
-                    fileStream.ReadInt32(),
-                    fileStream.ReadInt32(),
-                    fileStream.ReadInt32(),
-                    fileStream.ReadInt32()
-                });
+                    Unknown1 = fileStream.ReadInt16(),
+                    Unknown2 = fileStream.ReadInt16(),
+                    Unknown3 = fileStream.ReadInt16(),
+                    Unknown4 = fileStream.ReadInt16(),
+                    Unknown5 = fileStream.ReadInt16(),
+                    Unknown6 = fileStream.ReadInt16(),
+                    Unknown7 = fileStream.ReadInt16(),
+                    Unknown8 = fileStream.ReadInt16()
+                };
             }
 
-            scape.UnknownData = unknownDataList.ToArray();
-            scape.UnknownDataRange.End = fileStream.Position;
+            scape.HeightPropertiesRange.End = fileStream.Position;
         }
         
         private static void ReadTextureProperties(ref Scape scape, FileStream fileStream)
@@ -137,7 +140,7 @@ namespace PanzerElite.ScapeLoader
             scape.TexturePropertiesRange.Start = fileStream.Position;
 
             // Read data set
-            var dataSet = new List<TextureProperties>();
+            var dataSet = new List<TextureProperty>();
 
             for (var i = 0; i < scape.TexturePropertiesCount; i++)
             {
@@ -156,7 +159,7 @@ namespace PanzerElite.ScapeLoader
         /// <param name="fileStream"></param>
         /// <param name="result"></param>
         /// <returns>Returns false if a exit flag or end of file was hit</returns>
-        private static void ReadSingleTextureProperties(FileStream fileStream, out TextureProperties result)
+        private static void ReadSingleTextureProperties(FileStream fileStream, out TextureProperty result)
         {
             var startingPos = fileStream.Position;
 
@@ -178,7 +181,7 @@ namespace PanzerElite.ScapeLoader
                 unknownProp[j] = fileStream.ReadInt32();
             }
 
-            result = new TextureProperties
+            result = new TextureProperty
             {
                 TextureIndexes = unknownProp,
                 Index = fileStream.ReadInt32(),
