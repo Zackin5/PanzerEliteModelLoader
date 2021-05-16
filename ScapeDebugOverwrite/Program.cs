@@ -24,7 +24,7 @@ namespace ScapeDebugOverwrite
 
             var wipeTextureCloseLod = args.Skip(1).Contains("-tclod", StringComparer.OrdinalIgnoreCase);
             var wipeTextureUnknown1 = args.Skip(1).Contains("-tu1", StringComparer.OrdinalIgnoreCase);
-            var wipeTextureUnknown2 = args.Skip(1).Contains("-tu2", StringComparer.OrdinalIgnoreCase);
+            var wipeTexturePropertyFlags = args.Skip(1).Contains("-tpf", StringComparer.OrdinalIgnoreCase);
             var wipeTextureUnknown3 = args.Skip(1).Contains("-tu3", StringComparer.OrdinalIgnoreCase);
             var wipeTextureUnknown4 = args.Skip(1).Contains("-tu4", StringComparer.OrdinalIgnoreCase);
 
@@ -134,7 +134,7 @@ namespace ScapeDebugOverwrite
                 }
                 
                 // Unknown data overwrite
-                if (wipeTextureCloseLod || wipeTextureUnknown1 || wipeTextureUnknown2 || wipeTextureUnknown3 || wipeTextureUnknown4)
+                if (wipeTextureCloseLod || wipeTextureUnknown1 || wipeTexturePropertyFlags || wipeTextureUnknown3 || wipeTextureUnknown4)
                 {
                     fileStream.Seek(mapData.TexturePropertiesRange.Start - 4, SeekOrigin.Begin);
                     
@@ -158,13 +158,13 @@ namespace ScapeDebugOverwrite
                             fileStream.Seek(cLodByte32Count * 4, SeekOrigin.Current);
                         }
 
-                        // Skip texture properties index
+                        // Skip texture properties(?) index
                         fileStream.Seek(4, SeekOrigin.Current);
 
                         // Unknown1 wipe
                         if (wipeTextureUnknown1)
                         {
-                            fileStream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+                            fileStream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
                         }
                         else
                         {
@@ -173,7 +173,7 @@ namespace ScapeDebugOverwrite
 
                         // TilePropertyFlags wipe
                         const int byte16Count = 16;
-                        if (wipeTextureUnknown2)
+                        if (wipeTexturePropertyFlags)
                         {
                             for (var j = 0; j < byte16Count; j++)
                             {
@@ -185,8 +185,25 @@ namespace ScapeDebugOverwrite
                             fileStream.Seek(byte16Count * 2, SeekOrigin.Current);
                         }
 
-                        // Skip other values
-                        fileStream.Seek(8, SeekOrigin.Current);
+                        // Unknown index
+                        if (wipeTextureUnknown3)
+                        {
+                            fileStream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
+
+                        // Unknown2 property
+                        if (wipeTextureUnknown4)
+                        {
+                            fileStream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
                     }
                 }
 
