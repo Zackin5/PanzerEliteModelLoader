@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using PanzerElite.Extensions;
 using PanzerElite.ScapeLoader;
 
 namespace ScapeDebugOverwrite
@@ -20,7 +21,13 @@ namespace ScapeDebugOverwrite
             var wipeTextureModel = args.Skip(1).Contains("-txm", StringComparer.OrdinalIgnoreCase);
             var wipeTextureCoordBytes = args.Skip(1).Contains("-txb", StringComparer.OrdinalIgnoreCase);
             var wipeTextureCoordShorts = args.Skip(1).Contains("-txi", StringComparer.OrdinalIgnoreCase);
-            var wipeTextureProperties = args.Skip(1).Contains("-txp", StringComparer.OrdinalIgnoreCase);
+
+            var wipeTextureCloseLod = args.Skip(1).Contains("-tclod", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureUnknown1 = args.Skip(1).Contains("-tu1", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureUnknown2 = args.Skip(1).Contains("-tu2", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureUnknown3 = args.Skip(1).Contains("-tu3", StringComparer.OrdinalIgnoreCase);
+            var wipeTextureUnknown4 = args.Skip(1).Contains("-tu4", StringComparer.OrdinalIgnoreCase);
+
             var wipeUnknownData = args.Skip(1).Contains("-du", StringComparer.OrdinalIgnoreCase);
             var wipeEndingData = args.Skip(1).Contains("-en", StringComparer.OrdinalIgnoreCase);
 
@@ -41,9 +48,15 @@ namespace ScapeDebugOverwrite
                 File.Copy(mapPath, backupPath);
                 Console.WriteLine("Backed up input file");
             }
+            else
+            {
+                // Replace file with backup
+                Console.WriteLine("Referencing backup file");
+                File.Copy(backupPath, mapPath, true);
+            }
 
             // Datatype write consts
-            var emptyInt16 = new byte[] { 0x01, 0xff };
+            var emptyInt16 = new byte[] { 0x00, 0x00 };
             var emptyInt32 = new byte[] { 0, 0, 0, 0 };
 
             // Overwrite
@@ -119,15 +132,61 @@ namespace ScapeDebugOverwrite
                         fileStream.WriteByte(0);
                     }
                 }
-
+                
                 // Unknown data overwrite
-                if (wipeTextureProperties)
+                if (wipeTextureCloseLod || wipeTextureUnknown1 || wipeTextureUnknown2 || wipeTextureUnknown3 || wipeTextureUnknown4)
                 {
-                    fileStream.Seek(mapData.TexturePropertiesRange.Start, SeekOrigin.Begin);
+                    fileStream.Seek(mapData.TexturePropertiesRange.Start - 4, SeekOrigin.Begin);
+                    
+                    var texturePropertiesCount = fileStream.ReadInt32();
+
+                    Console.WriteLine($"{texturePropertiesCount} texture properties");
 
                     while (fileStream.Position < mapData.TexturePropertiesRange.End)
                     {
-                        fileStream.WriteByte(0);
+                        // Close LOD textures wipe
+                        const int cLodByte32Count = 20;
+                        if (wipeTextureCloseLod)
+                        {
+                            for (var j = 0; j < cLodByte32Count; j++)
+                            {
+                                fileStream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+                            }
+                        }
+                        else
+                        {
+                            fileStream.Seek(cLodByte32Count * 4, SeekOrigin.Current);
+                        }
+
+                        // Skip texture properties index
+                        fileStream.Seek(4, SeekOrigin.Current);
+
+                        // Unknown1 wipe
+                        if (wipeTextureUnknown1)
+                        {
+                            fileStream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+                        }
+                        else
+                        {
+                            fileStream.Seek(4, SeekOrigin.Current);
+                        }
+
+                        // TilePropertyFlags wipe
+                        const int byte16Count = 16;
+                        if (wipeTextureUnknown2)
+                        {
+                            for (var j = 0; j < byte16Count; j++)
+                            {
+                                fileStream.Write(new byte[] { 0x00, 0x00 });
+                            }
+                        }
+                        else
+                        {
+                            fileStream.Seek(byte16Count * 2, SeekOrigin.Current);
+                        }
+
+                        // Skip other values
+                        fileStream.Seek(8, SeekOrigin.Current);
                     }
                 }
 

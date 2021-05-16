@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using PanzerElite.Classes.RRF;
 using PanzerElite.Extensions;
 
 namespace PanzerElite.ScapeLoader
@@ -51,7 +50,7 @@ namespace PanzerElite.ScapeLoader
 
             ReadTextureProperties(ref scape, fileStream);
 
-            fileStream.Seek(4 * 2, SeekOrigin.Current); // Skip Texture properties termination bits
+            fileStream.Seek(4 * 2, SeekOrigin.Current); // Skip Texture properties termination bits(?)
 
             ReadModelProperties(ref scape, fileStream);
 
@@ -181,22 +180,30 @@ namespace PanzerElite.ScapeLoader
 
             result = new TextureProperties
             {
-                UnknownProperties = unknownProp,
+                TextureIndexes = unknownProp,
                 Index = fileStream.ReadInt32(),
                 Unknown1 = fileStream.ReadInt32()
             };
 
             // Read unknown 16 bits
             const int byte16Count = 16;
-            var unknown16Bits = new int[byte16Count];
+            result.TilePropertyFlags = new TexturePropertyFlag[byte16Count];
 
             for (var j = 0; j < byte16Count; j++)
             {
-                unknown16Bits[j] = fileStream.ReadInt16();
+                var (sinkDepth, height) = fileStream.Read4BitByte();
+                var (groundClass, brakingFactor) = fileStream.Read4BitByte();
+
+                result.TilePropertyFlags[j] = new TexturePropertyFlag
+                {
+                    SinkDepth = (byte)sinkDepth,
+                    Height = (byte)height,
+                    GroundClass = (byte)groundClass,
+                    BrakingFactor = (byte)brakingFactor
+                };
             }
 
             // Create data set object
-            result.TilePropertyFlags = unknown16Bits;
             result.UnknownIndex = fileStream.ReadInt32();
             result.Unknown2 = fileStream.ReadInt32();
         }
